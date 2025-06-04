@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Report Result";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<h2>Report Generated</h2>
+
+<p>From: @ViewBag.StartDate</p>
+<p>To: @ViewBag.EndDate</p>
+<p>Grouped By: @ViewBag.GroupBy</p>
+
+<p><strong>Note:</strong> This is a mockup. PDF generation would happen here in the real system.</p>
+
+<a class="btn btn-success" href="/">Back to Home</a>
+

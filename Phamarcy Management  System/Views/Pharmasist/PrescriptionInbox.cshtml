@@ -1,0 +1,578 @@
+﻿@model Phamarcy_Management__System.Models.PharmacistModels.PrescriptionUploadViewModel
+@{
+
+    ViewData["Title"] = "Create Patient Profile";
+}
+
+@{
+    Layout = "_PharmacistLayout";
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+    .tab-btn {
+        background-color: #e0e0e0;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #444;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        flex: 1;
+        text-align: center;
+    }
+
+        .tab-btn:hover {
+            background-color: #c0c0c0;
+        }
+
+        .tab-btn.active {
+            background-color: #17a2b8;
+            color: white;
+            cursor: default;
+        }
+
+    body {
+        background: #f4f6f8;
+        font-family: Arial, sans-serif;
+        color: #222;
+    }
+
+    h2 {
+        text-align: center;
+        margin: 40px 0 30px;
+        font-weight: 700;
+        font-size: 2rem;
+    }
+
+    table {
+        width: 90%;
+        max-width: 900px;
+        margin: 0 auto 50px auto;
+        border-collapse: collapse;
+        background-color: #f0f0f0;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        overflow: hidden;
+        font-size: 1.1rem;
+    }
+
+    .thead tr {
+        background-color: #e0e0e0;
+    }
+
+    . thead th {
+        padding: 15px 20px;
+        color: #000;
+        font-weight: 600;
+        text-align: left;
+        border-bottom: 2px solid #ccc;
+    }
+
+    .tbody tr {
+        border-bottom: 1px solid #ccc;
+        transition: background-color 0.2s ease;
+        cursor: default;
+    }
+
+    tbody tr:hover {
+        background-color: #dce7f7;
+    }
+
+
+    .tbody td {
+        vertical-align: middle;
+    }
+
+    /* Buttons */
+    a.btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        color: white;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+    a.btn-info {
+        background-color: #17a2b8;
+    }
+
+        a.btn-info:hover {
+            background-color: #138496;
+        }
+
+    a.btn-success {
+        background-color: #28a745;
+    }
+
+        a.btn-success:hover {
+            background-color: #218838;
+        }
+
+        a.btn-success.disabled,
+        a.btn-success[aria-disabled="true"] {
+            background-color: #94d3a2;
+            cursor: not-allowed;
+            pointer-events: none;
+            color: #f0f0f0;
+        }
+
+    /* Medication styling */
+    .td ul {
+        padding-left: 20px;
+        margin: 5px 0 0 0;
+        list-style: disc;
+        font-size: 0.95rem;
+        color: #333;
+    }
+
+    .medications-row {
+        background-color: #ffffff;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    #searchBox {
+        width: 90%;
+        max-width: 600px;
+        padding: 12px 40px 12px 16px;
+        border-radius: 30px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        background-image: url('data:image/svg+xml;utf8,<svg fill="%23999" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14z"/></svg>');
+        background-position: right 16px center;
+        background-repeat: no-repeat;
+        background-size: 20px;
+    }
+
+    .btn-action {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 2px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .btn-action.view {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+            .btn-action.view:hover {
+                background-color: #138496;
+                transform: translateY(-1px);
+            }
+
+        .btn-action:disabled,
+        .btn-action.disabled,
+        .btn-action[aria-disabled="true"] {
+            background-color: #b0cfd4;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .btn-action.dispense {
+            background-color: #28a745;
+            color: white;
+        }
+
+            .btn-action.dispense:hover {
+                background-color: #218838;
+                transform: translateY(-1px);
+            }
+
+        .btn-action:disabled,
+        .btn-action.disabled,
+        .btn-action[aria-disabled="true"] {
+            background-color: #b0cfd4;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+</style>
+<body> 
+    <div class="card shadow-sm border rounded p-4 mb-4" style="background-color: #f9f9f9;">
+        <!-- Welcome Message -->
+        <div class="text-center mb-4">
+            <h1 style="font-size: 2.3rem; color: #004085; font-weight: 700;">Welcome back, Pharmacist 👋</h1>
+        </div>
+
+        <!-- Section Heading -->
+        <h2 class="text-center mb-4" style="color: white; background-color: lightgray; padding: 10px 0; font-weight: 700; font-size: 2rem; border-radius: 8px;">
+            <i class="bi bi-clipboard2-pulse" style="font-size: 1.5rem;"></i>
+            Customer Orders
+        </h2>
+
+        <!-- Summary Tabs (Frontend Only) -->
+        <div style="width: 90%; max-width: 900px; margin: 20px auto 10px auto; display: flex; gap: 12px;">
+            <button id="tab-all" class="tab-btn active" onclick="filterByStatus('all')">
+                📋 All (3)
+            </button>
+            <button id="tab-pending" class="tab-btn" onclick="filterByStatus('pending')">
+                ⏳ Pending (2)
+            </button>
+            <button id="tab-dispensed" class="tab-btn" onclick="filterByStatus('dispensed')">
+                ✅ Dispensed (1)
+            </button>
+        </div>
+
+        <!-- Search Box -->
+        <div style="margin: 20px 0;">
+            <input type="text" id="searchBox" placeholder="Search by patient, status, or date..."
+                   onkeyup="filterPrescriptions()"
+                   style="width: 100%; padding: 12px; font-size: 1.1rem; border-radius: 8px; border: 1px solid #ccc; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);" />
+        </div>
+
+        <!-- Alerts -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <!-- Prescription Table (Frontend Only) -->
+        <div class="table-responsive" style="padding: 20px;">
+            <table class="table table-bordered"
+                   style="width: 100%; background-color: white; font-size: 1.05rem; color: #212529; border-radius: 10px; overflow: hidden;">
+                <thead style="background-color: #343a40; color: white;">
+                    <tr>
+                        <th style="padding: 14px;">Patient</th>
+                        <th>Drug</th>
+                        <th>Dosage</th>
+                        <th>Quantity</th>
+                        <th>Instructions</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="prescription-body">
+                    <!-- Rows will be generated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+     @*    <!-- View Prescription Modal -->
+        <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="viewModalLabel">View Prescription</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="viewModalBody">
+                        <!-- Dynamic content goes here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dispense Confirmation Modal -->
+        <div class="modal fade" id="dispenseModal" tabindex="-1" aria-labelledby="dispenseModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="dispenseModalLabel">Confirm Dispense</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="dispenseModalBody">
+                        <!-- Dynamic content goes here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success" id="confirmDispenseBtn">Dispense</button>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+
+
+
+
+
+        <script>
+                const prescriptions = [
+                {
+                    id: 1,
+                    patientName: "Alice Johnson",
+                    drugName: "Amoxicillin",
+                    dosage: "500mg",
+                    quantity: 20,
+                    instructions: "Take after meals",
+                    doctorName: "Dr. Stevens",
+                    prescriptionDate: "2025-05-25",
+                    isDispensed: false,
+                    medications: [
+                        { name: "Amoxicillin", dosage: "500mg", quantity: 20, repeats: 1, instructions: "Take twice daily" }
+                    ]
+                },
+                {
+                    id: 2,
+                    patientName: "Brian Lee",
+                    drugName: "Ibuprofen",
+                    dosage: "200mg",
+                    quantity: 30,
+                    instructions: "As needed for pain",
+                    doctorName: "Dr. Patel",
+                    prescriptionDate: "2025-05-24",
+                    isDispensed: true,
+                    medications: [
+                        { name: "Ibuprofen", dosage: "200mg", quantity: 30, repeats: 0, instructions: "After meals" }
+                    ]
+                },
+                {
+                    id: 3,
+                    patientName: "Carla Smith",
+                    drugName: "Lisinopril",
+                    dosage: "10mg",
+                    quantity: 28,
+                    instructions: "Once daily",
+                    doctorName: "Dr. Adams",
+                    prescriptionDate: "2025-05-22",
+                    isDispensed: false,
+                    medications: []
+                }
+            ];
+
+            const tbody = document.getElementById("prescription-body");
+
+            prescriptions.forEach(p => {
+                const statusColor = p.isDispensed ? "#28a745" : "#ffc107";
+                const statusText = p.isDispensed ? "Dispensed" : "Pending";
+
+                const mainRow = `
+                    <tr style="background-color: #fdfdfd;">
+                        <td style="padding: 10px;">${p.patientName}</td>
+                        <td>${p.drugName}</td>
+                        <td>${p.dosage}</td>
+                        <td>${p.quantity}</td>
+                        <td>${p.instructions}</td>
+                        <td>${p.doctorName}</td>
+                        <td>${new Date(p.prescriptionDate).toLocaleDateString()}</td>
+                        <td>
+                            <span style="font-weight: bold; color: ${statusColor};">${statusText}</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="alert('Viewing prescription for ${p.patientName}')">👁 View</button>
+                            <button class="btn btn-success btn-sm ${p.isDispensed ? "disabled" : ""}"
+                                title="${p.isDispensed ? "Already dispensed" : "Dispense this prescription"}"
+                                onclick="${p.isDispensed ? "" : `alert('Dispensing ${p.drugName} for ${p.patientName}')`}">💊 Dispense</button>
+                        </td>
+                    </tr>
+                `;
+
+                let medRow = `<tr class="medications-row" style="background-color: #f1f1f1;">
+                    <td colspan="9" style="padding: 12px;">
+                        <strong>Medications:</strong>`;
+
+                if (p.medications.length > 0) {
+                    medRow += `<ul style="margin-top: 5px; padding-left: 20px;">`;
+                    p.medications.forEach(m => {
+                        medRow += `<li>${m.name} - ${m.dosage} - Qty: ${m.quantity} - Repeats: ${m.repeats} - ${m.instructions}</li>`;
+                    });
+                    medRow += `</ul>`;
+                           } else {
+                    medRow += `<div style="margin-top: 5px; color: #666;">No additional medication details provided.</div>`;
+                }
+
+                medRow += `</td></tr>`;
+
+                tbody.innerHTML += mainRow + medRow;
+            });
+
+            function filterPrescriptions() {
+                const keyword = document.getElementById("searchBox").value.toLowerCase();
+                const rows = tbody.querySelectorAll("tr");
+
+                for (let i = 0; i < rows.length; i += 2) {
+                    const mainRow = rows[i];
+                    const medRow = rows[i + 1];
+
+                    const text = mainRow.textContent.toLowerCase();
+                    const match = text.includes(keyword);
+
+                    mainRow.style.display = match ? "" : "none";
+                    medRow.style.display = match ? "" : "none";
+                }
+            }
+
+            function filterByStatus(status) {
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.getElementById(`tab-${status}`).classList.add('active');
+
+                const rows = tbody.querySelectorAll("tr");
+
+                for (let i = 0; i < prescriptions.length; i++) {
+                    const isMatch = status === 'all' ||
+                                    (status === 'pending' && !prescriptions[i].isDispensed) ||
+                                    (status === 'dispensed' && prescriptions[i].isDispensed);
+
+                    rows[i * 2].style.display = isMatch ? "" : "none";       // main row
+                    rows[i * 2 + 1].style.display = isMatch ? "" : "none";   // medication row
+                }
+            }
+                        let selectedPrescriptionId = null;
+
+            function openViewModal(id) {
+                selectedPrescriptionId = id;
+                const prescription = prescriptions.find(p => p.id === id);
+                if (!prescription) return;
+
+                let html = `
+                    <p><strong>Patient:</strong> ${prescription.patientName}</p>
+                    <p><strong>Drug:</strong> ${prescription.drugName}</p>
+                    <p><strong>Dosage:</strong> ${prescription.dosage}</p>
+                    <p><strong>Quantity:</strong> ${prescription.quantity}</p>
+                    <p><strong>Instructions:</strong> ${prescription.instructions}</p>
+                    <p><strong>Doctor:</strong> ${prescription.doctorName}</p>
+                    <p><strong>Date:</strong> ${new Date(prescription.prescriptionDate).toLocaleDateString()}</p>
+                    <p><strong>Status:</strong> ${prescription.isDispensed ? 'Dispensed' : 'Pending'}</p>
+                `;
+
+                if (prescription.medications.length > 0) {
+                    html += `<h6>Medications Details:</h6><ul>`;
+                    prescription.medications.forEach(m => {
+                        html += `<li>${m.name} - ${m.dosage} - Qty: ${m.quantity} - Repeats: ${m.repeats} - ${m.instructions}</li>`;
+                    });
+                    html += `</ul>`;
+                } else {
+                    html += `<p><em>No additional medication details provided.</em></p>`;
+                }
+
+                document.getElementById("viewModalBody").innerHTML = html;
+
+                const modal = new bootstrap.Modal(document.getElementById("viewModal"));
+                modal.show();
+            }
+
+            function openDispenseModal(id) {
+                selectedPrescriptionId = id;
+                const prescription = prescriptions.find(p => p.id === id);
+                if (!prescription) return;
+
+                if (prescription.isDispensed) {
+                    alert("This prescription has already been dispensed.");
+                    return;
+                }
+
+                const html = `
+                    <p>Are you sure you want to dispense the medication for <strong>${prescription.patientName}</strong>?</p>
+                    <p><strong>Drug:</strong> ${prescription.drugName}</p>
+                    <p><strong>Dosage:</strong> ${prescription.dosage}</p>
+                    <p><strong>Quantity:</strong> ${prescription.quantity}</p>
+                    <p><strong>Instructions:</strong> ${prescription.instructions}</p>
+                `;
+
+                document.getElementById("dispenseModalBody").innerHTML = html;
+
+                const modal = new bootstrap.Modal(document.getElementById("dispenseModal"));
+                modal.show();
+            }
+
+            document.getElementById("confirmDispenseBtn").addEventListener("click", () => {
+                if (selectedPrescriptionId === null) return;
+
+                const prescription = prescriptions.find(p => p.id === selectedPrescriptionId);
+                if (!prescription) return;
+
+                if (prescription.isDispensed) {
+                    alert("This prescription has already been dispensed.");
+                    return;
+                }
+
+                prescription.isDispensed = true;
+
+                // Hide modal
+                const dispenseModalEl = document.getElementById("dispenseModal");
+                const modalInstance = bootstrap.Modal.getInstance(dispenseModalEl);
+                modalInstance.hide();
+
+                alert(`Prescription for ${prescription.patientName} has been dispensed.`);
+
+                // Refresh the table rows to reflect status change
+                tbody.innerHTML = ""; // clear existing
+                renderPrescriptions();
+            });
+
+            function renderPrescriptions() {
+                prescriptions.forEach(p => {
+                    const statusColor = p.isDispensed ? "#28a745" : "#ffc107";
+                    const statusText = p.isDispensed ? "Dispensed" : "Pending";
+
+                    const mainRow = `
+                        <tr style="background-color: #fdfdfd;">
+                            <td style="padding: 10px;">${p.patientName}</td>
+                            <td>${p.drugName}</td>
+                            <td>${p.dosage}</td>
+                            <td>${p.quantity}</td>
+                            <td>${p.instructions}</td>
+                            <td>${p.doctorName}</td>
+                            <td>${new Date(p.prescriptionDate).toLocaleDateString()}</td>
+                            <td>
+                                <span style="font-weight: bold; color: ${statusColor};">${statusText}</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-info btn-sm" onclick="openViewModal(${p.id})">👁 View</button>
+                                <button class="btn btn-success btn-sm ${p.isDispensed ? "disabled" : ""}"
+                                    title="${p.isDispensed ? "Already dispensed" : "Dispense this prescription"}"
+                                    onclick="${p.isDispensed ? "" : `openDispenseModal(${p.id})`}">💊 Dispense</button>
+                            </td>
+                        </tr>
+                    `;
+
+                    let medRow = `<tr class="medications-row" style="background-color: #f1f1f1;">
+                        <td colspan="9" style="padding: 12px;">
+                            <strong>Medications:</strong>`;
+
+                    if (p.medications.length > 0) {
+                        medRow += `<ul style="margin-top: 5px; padding-left: 20px;">`;
+                        p.medications.forEach(m => {
+                            medRow += `<li>${m.name} - ${m.dosage} - Qty: ${m.quantity} - Repeats: ${m.repeats} - ${m.instructions}</li>`;
+                        });
+                        medRow += `</ul>`;
+                    } else {
+                        medRow += `<div style="margin-top: 5px; color: #666;">No additional medication details provided.</div>`;
+                    }
+
+                    medRow += `</td></tr>`;
+
+                    tbody.innerHTML += mainRow + medRow;
+                });
+            }
+
+            // Initial render
+            renderPrescriptions();
+
+
+        </script>
+    </div>
+
+</body>
+
+
+
+
+
+
+

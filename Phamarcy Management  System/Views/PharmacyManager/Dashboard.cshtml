@@ -1,0 +1,172 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="dashboard-container" data-aos="zoom-out">
+    <h1 class="dashboard-title">Pharmacy CEO Dashboard</h1>
+
+    <div class="dashboard-grid">
+        <!-- Medication Stock Levels Bar Chart -->
+        <div class="dashboard-card">
+            <h2 class="chart-title">Medication Stock Levels (%)</h2>
+            <canvas id="stockLevelChart" height="200"></canvas>
+
+            <div class="card-buttons">
+                <a asp-controller="PharmacyManager" asp-action="ManageMedicationRecords" class="btn">Manage Medications</a>
+                <a asp-controller="PharmacyManager" asp-action="StockRecords" class="btn">View Stock</a>
+            </div>
+        </div>
+
+        <!-- Monthly Orders Line Chart -->
+        <div class="dashboard-card" >
+            <h2 class="chart-title">Monthly Orders</h2>
+            <canvas id="ordersLineChart" height="200"></canvas>
+            <div class="card-buttons">
+                <a asp-controller="PharmacyManager" asp-action="StockOrders" class="btn">View Stock Orders</a>
+            </div>
+        </div>
+
+        <!-- Supplier Performance Polar Chart -->
+        <div class="dashboard-card" >
+            <h2 class="chart-title">Supplier Performance</h2>
+            <div class="chart-center">
+                <div class="chart-small">
+                    <canvas id="supplierBarChart"></canvas>
+                </div>
+            </div>
+            <div class="card-buttons">
+                <a asp-controller="PharmacyManager" asp-action="ManageSuppliers" class="btn">Manage Suppliers</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Medication Stock Levels Bar Chart
+        new Chart(document.getElementById("stockLevelChart"), {
+            type: 'bar',
+            data: {
+                labels: ["Syrup", "Tablet", "Ointment", "Injection"],
+                datasets: [
+                    {
+                        label: "Reorder Level",
+                        data: [50, 50, 50, 50],
+                        backgroundColor: "#f87171"
+                    },
+                    {
+                        label: "Low",
+                        data: [40, 40, 40, 40],
+                        backgroundColor: "#facc15"
+                    },
+                    {
+                        label: "Available Stock",
+                        data: [55, 65, 75, 70],
+                        backgroundColor: "#4ade80"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: "Percentage (%)"
+                        }
+                    }
+                }
+            }
+        });
+
+        // Orders per Month Line Chart
+        new Chart(document.getElementById("ordersLineChart"), {
+            type: 'line',
+            data: {
+                labels: [
+                    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+
+                ],
+                datasets: [{
+                    label: 'Total Orders Per Month',
+                    data: [50, 70, 65, 90, 80, 60, 100, 110, 95, 85, 75, 105],
+                    borderColor: "#3b82f6",
+                    backgroundColor: "rgba(59, 130, 246, 0.2)",
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Total Orders"
+                        }
+                    }
+                }
+            }
+        });
+
+        // Supplier Performance Pie Chart
+               new Chart(document.getElementById("supplierBarChart"), {
+            type: 'bar',
+            data: {
+                labels: ["SENST", "NUTRI", "AV", "GOV"],
+                datasets: [{
+                    label: 'Supplier Performance',
+                    data: [120, 90, 60, 30],
+                    backgroundColor: ["#60a5fa", "#34d399", "#fbbf24", "#f472b6"]
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y', // horizontal bars
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Total Orders'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Suppliers'
+                        }
+                    }
+                }
+            }
+        });
+
+            AOS.init({
+            offset: 300,
+            duration: 1400
+        });
+
+
+    </script>
+}

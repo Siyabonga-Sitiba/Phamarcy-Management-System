@@ -1,0 +1,254 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pharmacy Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a2d9d6ea6c.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa, darkgrey);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+            .container h1 {
+                margin-bottom: 1rem;
+                font-size: 2rem;
+                color: grey;
+            }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+            .tab-buttons button {
+                flex: 1;
+                padding: 0.7rem;
+                border: none;
+                background-color: #b0b0b0; /* light grey */
+                color: #333;
+                font-weight: bold;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+
+                .tab-buttons button.active {
+                    background-color: #707070; /* darker grey */
+                    color: #ffffff;
+                }
+
+        form {
+            display: none;
+        }
+
+            form.active {
+                display: block;
+            }
+
+        .input-group {
+            margin: 0.7rem 0;
+            text-align: left;
+        }
+
+            .input-group label {
+                display: block;
+                margin-bottom: 0.3rem;
+                font-weight: 600;
+            }
+
+            .input-group input {
+                width: 100%;
+                padding: 0.5rem;
+                border: 1px solid #ccc;
+                border-radius: 10px;
+            }
+
+        button.submit-btn {
+            margin-top: 1rem;
+            background-color: #888888; /* medium grey */
+            color: #fff;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            button.submit-btn:hover {
+                background-color: #555555; /* slightly darker on hover */
+            }
+
+        .icon-header {
+            font-size: 3rem;
+            color: #6a1b9a;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message {
+            color: green;
+            margin-bottom: 10px;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+
+
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .styled-select {
+            width: 100%;
+            padding: 0.5rem;
+            padding-right: 2.5rem;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1rem;
+            background-color: #fff;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: none;
+        }
+
+        .select-arrow {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+            transform: translateY(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #6a1b9a; /* Match your theme */
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ... your existing markup ... -->
+
+        <div class="tab-buttons">
+            <button id="signInBtn" class="active" onclick="showForm(event, 'login')">Sign In</button>
+            <button id="registerBtn" onclick="showForm(event, 'register')">Register</button>
+        </div>
+
+        <!-- Show login error -->
+        @if (ViewBag.LoginError != null)
+        {
+            <p style="color:red;">@ViewBag.LoginError</p>
+        }
+
+        <!-- Show registration success -->
+        @if (TempData["RegistrationSuccess"] != null)
+        {
+            <p style="color:green;">@TempData["RegistrationSuccess"]</p>
+        }
+
+        <form id="login" asp-controller="Customer" asp-action="Login" method="post" class="active">
+            <div class="input-group">
+                <label for="login-email">Email Address</label>
+                <input type="email" id="login-email" name="email" required />
+            </div>
+            <div class="input-group">
+                <label for="login-password">Password</label>
+                <input type="password" id="login-password" name="password" required />
+            </div>
+            <button class="submit-btn" type="submit">Login</button>
+        </form>
+
+        <form id="register" asp-controller="Customer" asp-action="Register" method="post">
+            <div class="input-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="Name" required />
+            </div>
+            <div class="input-group">
+                <label for="surname">Surname</label>
+                <input type="text" id="surname" name="Surname" required />
+            </div>
+            <div class="input-group">
+                <label for="id">ID Number</label>
+                <input type="text" class="form-control" id="id" name="IDNumber" required pattern="^\d{13}$" title="ID Number must  be exactly 13 digits" >
+            </div>
+            <div class="input-group">
+                <label for="cell">Cellphone Number</label>
+                <input type="tel" class="form-control" id="cell" name="PhoneNumber" required pattern="^\d{10}$" title="Cellphone number must be exactly 10 digits">
+            </div>
+            <div class="input-group">
+                <label for="register-email">Email Address</label>
+                <input type="email" id="register-email" name="Email" required />
+            </div>
+            <div class="input-group">
+                <label for="allergies">Allergies</label>
+                <div class="custom-select-wrapper">
+                    <select id="allergies" name="Allergies" class="styled-select">
+                        @foreach (var item in ViewBag.Allergies as SelectList)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                    <span class="select-arrow"></span>
+                </div>
+            </div>
+
+
+            <div class="input-group">
+                <label for="register-password">Password</label>
+                <input type="password" id="register-password" name="Password" required />
+            </div>
+            <button class="submit-btn" type="submit">Register</button>
+        </form>
+    </div>
+
+
+    <script>
+        function showForm(e, formId) {
+            e.preventDefault();
+
+            const forms = document.querySelectorAll('form');
+            const buttons = document.querySelectorAll('.tab-buttons button');
+
+            forms.forEach(f => f.classList.remove('active'));
+            buttons.forEach(b => b.classList.remove('active'));
+
+            document.getElementById(formId).classList.add('active');
+            e.target.classList.add('active');
+        }
+
+    </script>
+</body>
+</html>

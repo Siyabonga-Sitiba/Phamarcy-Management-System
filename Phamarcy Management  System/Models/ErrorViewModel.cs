@@ -1,4 +1,4 @@
-namespace Phamarcy_Management__System.Models
+namespace WebApplication1.Models
 {
     public class ErrorViewModel
     {

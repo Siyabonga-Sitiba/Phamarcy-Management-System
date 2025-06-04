@@ -1,0 +1,201 @@
+﻿@using WebApplication1.Data
+@model WebApplication1.Models.Pharmacy.Medication
+@{
+    ViewData["Title"] = "Add Medication";
+    var meds = MockInventory.Medications;
+}
+<style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+        .modal.hidden {
+            display: none;
+        }
+    .modal.hidden {
+        display: none;
+    }
+
+    .modal-content {
+        background: darkgrey;
+        padding: 30px;
+        border-radius: 8px;
+        width: 70%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        font-family: Arial, sans-serif;
+        margin: 30px auto;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+        .form-grid.single {
+            grid-template-columns: 1fr;
+        }
+
+    .input {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 100%;
+        background-color: #1e1e1e;
+        color: white;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    h2, h5 {
+        color: white;
+    }
+
+    .input {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 100%;
+    }
+
+        .input:invalid {
+            border-color: #dc3545;
+        }
+
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .details {
+        background: darkgrey;
+        padding: 30px;
+        border-radius: 8px;
+        width: 70%;
+        margin: 30px auto;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .details-content {
+        margin-top: 15px;
+        line-height: 1.8;
+        color: #333;
+    }
+
+
+</style>
+
+<div class="modal-content">
+    <h2 style="text-align:center;">➕ Add Medication</h2>
+
+    <form asp-action="Medication" onsubmit="return addMockMedication(event)">
+        <h5>💊 Medication Details</h5>
+
+        <div class="form-grid">
+            <input type="text" name="MedicationName" class="input" placeholder="Medication Name" required />
+            <input type="text" name="DosageForm" class="input" placeholder="Dosage Form (e.g., 250mg Tablet)" required />
+        </div>
+
+        <div class="form-grid">
+            <input type="number" name="Quantity" class="input" placeholder="Quantity in Stock" required />
+            <input type="date" name="ExpiryDate" class="input" placeholder="Expiry Date" required />
+        </div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-success">💾 Save Medication</button>
+        </div>
+    </form>
+
+    @if (meds.Any())
+    {
+        <h4 class="mt-5">📦 Current Inventory</h4>
+        <table class="table table-striped table-bordered mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Dosage</th>
+                    <th>Expiry</th>
+                    <th>Quantity</th>
+                    <th>Schedule</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var med in meds)
+                {
+                    <tr>
+                        <td>@med.MedicationName</td>
+                        <td>@med.DosageForm</td>
+                        <td>@med.ExpiryDate.ToShortDateString()</td>
+                        <td>@med.Quantity</td>
+                        <td>@med.Schedule</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -1,0 +1,208 @@
+﻿@model Phamarcy_Management__System.Models.PharmacistModels.PrescriptionUploadViewModel
+@{
+
+    ViewData["Title"] = "Create Patient Profile";
+}
+
+@{
+    Layout = "_PharmacistLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Prescription Checked Out</title>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: Arial, sans-serif;
+            color: #222;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 40px 0 30px;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        p {
+            max-width: 900px;
+            margin: 0 auto 12px auto;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 90%;
+            color: #111;
+        }
+
+        h4 {
+            max-width: 900px;
+            margin: 30px auto 10px auto;
+            font-weight: 700;
+            font-size: 1.5rem;
+            width: 90%;
+            color: #222;
+        }
+
+        table {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            font-size: 1.1rem;
+        }
+
+        thead tr {
+            background-color: #e0e0e0;
+        }
+
+        thead th,
+        tbody td {
+            padding: 14px 20px;
+            color: #000;
+        }
+
+        form {
+            max-width: 900px;
+            margin: 0 auto 40px auto;
+            width: 90%;
+            text-align: center;
+        }
+
+        label.confirm-label {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            display: inline-block;
+            cursor: pointer;
+            color: #222;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.3);
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        button.btn {
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            button.btn:disabled {
+                background-color: #90caf9;
+                cursor: not-allowed;
+            }
+
+        .alert {
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-msg {
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Prescription Checked Out</h2>
+
+    <p><b>Prescription ID:</b> 98765</p>
+    <p><b>Patient:</b> John Doe (P123456)</p>
+    <p><b>Doctor:</b> Dr. Emily Carter</p>
+    <p><b>Date Issued:</b> 2025-05-28</p>
+
+    <h4>Medications</h4>
+    <table>
+        <thead>
+            <tr><th>Name</th><th>Quantity</th><th>Instructions</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Amoxicillin</td>
+                <td>30</td>
+                <td>Take one capsule every 8 hours</td>
+            </tr>
+            <tr>
+                <td>Loratadine</td>
+                <td>10</td>
+                <td>Take one tablet daily</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form id="checkoutForm" onsubmit="event.preventDefault(); submitCheckout();">
+        <label class="confirm-label">
+            <input type="checkbox" id="confirmCollected" />
+            Confirm patient collected the prescription
+        </label>
+        <br />
+        <button id="submitBtn" class="btn" type="submit" disabled>Submit</button>
+    </form>
+
+    <div id="alertBox" class="alert" style="display:none;">Please confirm patient collected the prescription before submitting.</div>
+    <div id="successBox" class="success-msg" style="display:none;">Prescription successfully checked out and recorded.</div>
+
+    <script>
+        const confirmCheckbox = document.getElementById('confirmCollected');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertBox = document.getElementById('alertBox');
+        const successBox = document.getElementById('successBox');
+
+        confirmCheckbox.addEventListener('change', () => {
+          alertBox.style.display = 'none';
+          successBox.style.display = 'none';
+          submitBtn.disabled = !confirmCheckbox.checked;
+        });
+
+        function submitCheckout() {
+          if (!confirmCheckbox.checked) {
+            alertBox.style.display = 'block';
+            successBox.style.display = 'none';
+            return;
+          }
+          alertBox.style.display = 'none';
+          successBox.style.display = 'block';
+
+          // Disable form inputs on success
+          confirmCheckbox.disabled = true;
+          submitBtn.disabled = true;
+        }
+    </script>
+
+</body>
+</html>
+

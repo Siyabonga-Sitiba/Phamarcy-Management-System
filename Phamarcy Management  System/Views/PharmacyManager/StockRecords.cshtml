@@ -1,0 +1,589 @@
+﻿@{
+    ViewData["Title"] = "Manage Medication Stiock Records";
+    Layout = "_Layout";
+}
+
+
+<div class="container" data-aos="fade-right">
+    <h2 class="dashboard-title">Medication Stock Management</h2>
+
+    <!-- Search & Filter -->
+    <div class="toolbar">
+        <button class="btn btn-primary" onclick="goToReorderView()">📦 Reorder Stock</button>
+
+        <div class="search-filter">
+            <input type="text" id="searchInput" placeholder="Search by Medicine Name" class="input" oninput="renderMedications()">
+           
+            <select id="statusFilter" class="input" onchange="renderMedications()">
+                <option value="All">Filter by Stock</option>
+                <option value="InStock">In Stock</option>
+                <option value="LowStock">Low Stock</option>
+                <option value="ReorderLevel">Reorder Level</option>
+                <option value="OutOfStock">Out of Stock</option>
+
+
+            </select>
+        </div>
+    </div>
+
+    <!-- Medication Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Medication Name</th>
+                <th>Reorder Level</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="medicationList"></tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div id="pagination" class="pagination"></div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal hidden" id="editModal" data-aos="fade-left">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Medication</h3>
+            <button class="close-btn" onclick="closeEditModal()">×</button>
+        </div>
+        <form onsubmit="saveMedicationEdit(event)">
+            <div class="form-grid">
+                <input type="text" id="editName" class="input" placeholder="Medication Name" readonly>
+            </div><br />
+            <div class="form-grid">
+                <input type="number" id="editQty" class="input" placeholder="Quantity" required>
+            </div><br />
+            <div class="form-grid">
+                <!-- Inside the edit modal form -->
+                <input type="text" id="editStatus" class="input" readonly>
+
+
+            </div><br />
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Medication Details Section -->
+<div id="pharmacistDetails" class="details hidden">
+    <h3>Medication Details</h3>
+    <div id="detailsContent" class="details-content"></div>
+    <div class="button-group">
+        <button onclick="goBack()" class="btn btn-secondary">🔙 Go Back</button>
+    </div>
+</div>
+
+
+
+<!-- Reorder Modal -->
+<div class="modal hidden" id="reorderModal" data-aos="fade-left">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Reorder Medications</h3>
+            <button class="close-btn" onclick="closeReorderModal()">×</button>
+        </div>
+        <form id="reorderForm" onsubmit="submitReorderForm(event)">
+            <table id="medicationTable" class="table">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Medication Name</th>
+                        <th>Reorder Level</th>
+                        <th>Qty</th>
+                        <th>Qty to Order</th>
+                        <th>Supplier</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody id="medicationsList"></tbody>
+            </table>
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" onclick="addRow()">Add Medication</button>
+                <button type="submit" class="btn btn-success">Place Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+        .modal.hidden {
+            display: none;
+        }
+
+    .modal-content {
+        background: darkgrey;
+        padding: 30px;
+        border-radius: 8px;
+        width: 600px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        font-family: Arial, sans-serif;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+        .close-btn:hover {
+            color: darkred;
+        }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+        .form-grid.single {
+            grid-template-columns: 1fr;
+        }
+
+    .input {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 100%;
+    }
+
+        .input:invalid {
+            border-color: #dc3545;
+        }
+
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: mediumaquamarine;
+        color: white;
+    }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            opacity: 0.9;
+        }
+
+    .container {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .search-filter {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    table {
+        width: 70%;
+        border-collapse: collapse;
+        margin: 10px auto;
+        background-color: white;
+    }
+
+    th{
+        background-color:darkgrey;
+    }
+
+    td {
+        color: black;
+    }
+    th, td {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        justify-content: center;
+    }
+    td{
+        color:black;
+    }
+
+    .pagination {
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+        .pagination span {
+            font-weight: bold;
+            color: darkred;
+        }
+
+
+    .ingredient-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+        .ingredient-row select,
+        .ingredient-row input {
+            flex: 1;
+        }
+
+        .ingredient-row button {
+            flex: 0 0 auto;
+        }
+
+
+    /* Additional styles for the Reorder Modal */
+    #reorderModal .form-grid {
+        margin-top: 20px;
+    }
+
+    .medication-item {
+        margin-bottom: 10px;
+    }
+
+</style>
+
+
+
+@section Scripts {
+  <script>
+    let medications = [
+        { id: 1, name: "Paracetamol", qty: 30, reorderLevel: 100, status: "In Stock", supplier: "MediPlus" },
+        { id: 2, name: "Ibuprofen", qty: 10, reorderLevel: 100, status: "In Stock", supplier: "PharmaInc" },
+        { id: 3, name: "Amoxicillin", qty: 5, reorderLevel: 100, status: "In Stock", supplier: "MediPlus" },
+        { id: 4, name: "Aspirin", qty: 60, reorderLevel: 100, status: "In Stock", supplier: "PharmaInc" },
+        { id: 5, name: "Ciprofloxacin", qty: 80, reorderLevel: 100, status: "In Stock", supplier: "HealthFirst" },
+        { id: 6, name: "Metformin", qty: 0, reorderLevel: 100, status: "Out of Stock", supplier: "MediPlus" },
+        { id: 7, name: "Losartan", qty: 45, reorderLevel: 100, status: "Low Stock", supplier: "PharmaInc" },
+        { id: 8, name: "Omeprazole", qty: 20, reorderLevel: 100, status: "Low Stock", supplier: "HealthFirst" },
+        { id: 9, name: "Simvastatin", qty: 5, reorderLevel: 100, status: "Low Stock", supplier: "MediPlus" },
+        { id: 10, name: "Hydrochlorothiazide", qty: 90, reorderLevel: 100, status: "In Stock", supplier: "PharmaInc" },
+        { id: 11, name: "Azithromycin", qty: 0, reorderLevel: 100, status: "Out of Stock", supplier: "MediPlus" },
+        { id: 12, name: "Prednisone", qty: 12, reorderLevel: 100, status: "Low Stock", supplier: "HealthFirst" },
+        { id: 13, name: "Clopidogrel", qty: 110, reorderLevel: 100, status: "In Stock", supplier: "PharmaInc" },
+        { id: 14, name: "Levothyroxine", qty: 25, reorderLevel: 100, status: "Low Stock", supplier: "MediPlus" },
+        { id: 15, name: "Albuterol", qty: 0, reorderLevel: 100, status: "Out of Stock", supplier: "PharmaInc" },
+        { id: 16, name: "Warfarin", qty: 95, reorderLevel: 100, status: "Low Stock", supplier: "HealthFirst" },
+        { id: 17, name: "Doxycycline", qty: 55, reorderLevel: 100, status: "Low Stock", supplier: "MediPlus" },
+        { id: 18, name: "Gabapentin", qty: 120, reorderLevel: 100, status: "In Stock", supplier: "PharmaInc" },
+        { id: 19, name: "Lisinopril", qty: 0, reorderLevel: 100, status: "Out of Stock", supplier: "MediPlus" },
+        { id: 20, name: "Tramadol", qty: 70, reorderLevel: 100, status: "Low Stock", supplier: "HealthFirst" }
+    ];
+
+    let currentPage = 1;
+    const perPage = 4;
+    let selectedMedication = null;
+
+    // Load from localStorage if available
+    const storedMeds = localStorage.getItem("medications");
+    if (storedMeds) {
+        medications = JSON.parse(storedMeds);
+    }
+
+    function renderMedications() {
+        const search = document.getElementById("searchInput").value.toLowerCase();
+        const statusFilter = document.getElementById("statusFilter").value;
+
+        const listEl = document.getElementById("medicationList");
+        const paginationEl = document.getElementById("pagination");
+
+               let filtered = medications.filter(m => {
+            const matchName = m.name.toLowerCase().includes(search);
+            const matchStatus =
+                statusFilter === "All" ||
+                // Reorder Level status: qty > reorderLevel by 1-10 units
+                (statusFilter === "ReorderLevel" && m.qty > m.reorderLevel && m.qty <= m.reorderLevel + 10) ||
+                // In Stock status: qty > reorderLevel by more than 10 units
+                (statusFilter === "InStock" && m.qty > m.reorderLevel + 11) ||
+                // Low Stock status: qty is less than reorderLevel but more than 0
+                (statusFilter === "LowStock" && m.qty > 0 && m.qty < m.reorderLevel) ||
+                // Out of Stock status: qty equals 0
+                (statusFilter === "OutOfStock" && m.qty === 0);
+
+            return matchName && matchStatus;
+        });
+
+
+        const start = (currentPage - 1) * perPage;
+        const paged = filtered.slice(start, start + perPage);
+
+        listEl.innerHTML = paged.map(m => `
+            <tr>
+                <td>${m.name}</td>
+                <td>${m.reorderLevel}</td>
+                <td>${m.qty}</td>
+                <td>${m.qty === 0 ? '<span style="color: darkred;">Out of Stock</span>' : m.qty < m.reorderLevel ? '<span style="color: red;">Low Stock</span>' : (m.qty <= m.reorderLevel + 10 ? '<span style="color: orange;">Reorder Level</span>' : '<span style="color: green;">In Stock</span>')}</td>
+                <td>
+                    <button class="btn btn-success" onclick="openEditModal(${m.id})">Edit</button>
+                    <button class="btn btn-secondary" onclick="openDetailsModal(${m.id})">Details</button>
+                </td>
+            </tr>
+        `).join("");
+
+        const totalPages = Math.ceil(filtered.length / perPage);
+        paginationEl.innerHTML = `<span style="color: darkred;">Page ${currentPage} of ${totalPages || 1}</span>`;
+        for (let i = 1; i <= totalPages; i++) {
+            paginationEl.innerHTML += `<button onclick="goToPage(${i})" class="btn ${i === currentPage ? 'btn-primary' : 'btn-secondary'}">${i}</button>`;
+        }
+    }
+
+    function goToPage(page) {
+        currentPage = page;
+        renderMedications();
+    }
+
+    function openEditModal(id) {
+        selectedMedication = medications.find(m => m.id === id);
+        if (!selectedMedication) return;
+
+        document.getElementById("editName").value = selectedMedication.name;
+        document.getElementById("editQty").value = selectedMedication.qty;
+        document.getElementById("editStatus").value = selectedMedication.status;
+
+        document.getElementById("editModal").classList.remove("hidden");
+    }
+
+    function closeEditModal() {
+        document.getElementById("editModal").classList.add("hidden");
+    }
+
+        function saveMedicationEdit(event) {
+            event.preventDefault();
+
+            if (selectedMedication) {
+                selectedMedication.qty = parseInt(document.getElementById("editQty").value);
+
+                // Auto-update status based on qty and reorderLevel
+                if (selectedMedication.qty === 0) {
+                    selectedMedication.status = "Out of Stock";
+                } else if (selectedMedication.qty < selectedMedication.reorderLevel) {
+                    selectedMedication.status = "Low Stock";
+                } else if (selectedMedication.qty === selectedMedication.reorderLevel) {
+                    selectedMedication.status = "Reorder Level";
+                } else if (selectedMedication.qty > selectedMedication.reorderLevel + 10) {
+                    selectedMedication.status = "In Stock";
+                }
+
+                closeEditModal();
+                alert("Medication updated successfully.");
+
+                renderMedications();
+                localStorage.setItem("medications", JSON.stringify(medications)); // save changes
+            }
+        }
+
+
+
+
+        function openDetailsModal(id) {
+                console.log('openDetailsModal called with id:', id);
+                const med = medications.find(m => m.id === id);
+                if (!med) {
+                    console.error('Medication not found');
+                    return;
+                }
+
+                document.getElementById("detailsContent").innerHTML = `
+                    <p><strong>Name:</strong> ${med.name}</p>
+                    <p><strong>Quantity:</strong> ${med.qty}</p>
+                    <p><strong>Reorder Level:</strong> ${med.reorderLevel}</p>
+                    <p><strong>Status:</strong> ${med.status}</p>
+                    <p><strong>Supplier:</strong> ${med.supplier}</p>
+                `;
+                selectedMedication = med;
+                document.getElementById("pharmacistDetails").classList.remove("hidden");
+                console.log('Modal opened');
+            }
+
+            function closeDetailsModal() {
+                console.log('closeDetailsModal called');
+                document.getElementById("pharmacistDetails").classList.add("hidden");
+                console.log('Modal closed');
+            }
+
+
+
+    // Initial render
+    renderMedications();
+
+    // Filters
+    document.getElementById("searchInput").addEventListener("input", renderMedications);
+    document.getElementById("statusFilter").addEventListener("change", renderMedications);
+
+    // AOS animation init
+    AOS.init({ offset: 300, duration: 1400 });
+
+
+
+
+
+
+    //////////////////////Stock order js//////////////////////////////
+        // Open Reorder Modal
+        function goToReorderView() {
+            const reorderModal = document.getElementById("reorderModal");
+            reorderModal.classList.remove("hidden");
+
+            // Filter medications by stock status
+            const outOfStockMeds = medications.filter(m => m.qty === 0);
+            const lowStockMeds = medications.filter(m => m.qty > 0 && m.qty < m.reorderLevel);
+            const reorderLevelMeds = medications.filter(m => m.qty === m.reorderLevel);
+
+            // Combine them in the desired order: Out of Stock, Low Stock, Reorder Level
+            const allMeds = [...outOfStockMeds, ...lowStockMeds, ...reorderLevelMeds];
+
+            // Render medications with checkboxes
+            const medicationsList = document.getElementById("medicationsToReorder");
+            medicationsList.innerHTML = allMeds.map(med => `
+                <tr class="medication-item">
+                    <td><input type="checkbox" id="med-${med.id}" value="${med.id}" /></td>
+                    <td>${med.name}</td>
+                    <td>${med.reorderLevel}</td>
+                    <td>${med.qty}</td>
+                    <td><input type="number" id="qtyToOrder-${med.id}" value="0" min="1" /></td>
+                    <td>${med.supplier}</td>
+                </tr>
+            `).join("");
+        }
+
+
+        // Close Reorder Modal
+        function closeReorderModal() {
+            document.getElementById("reorderModal").classList.add("hidden");
+        }
+
+        // Add New Medication to Order List
+        function addNewMedication() {
+            const name = document.getElementById("newMedication").value;
+            const qty = parseInt(document.getElementById("newQty").value);
+
+            if (!name || isNaN(qty) || qty <= 0) {
+                alert("Please provide valid medication name and quantity.");
+                return;
+            }
+
+            // Add new medication to the medications array
+            const newMed = {
+                id: medications.length + 1,
+                name,
+                qty,
+                reorderLevel: 100,
+                status: "Low Stock",
+                supplier: "NewSupplier"
+            };
+
+            medications.push(newMed);
+
+            // Re-render the reorder modal with the updated list
+            goToReorderView();  // Refresh the list with the new medication
+        }
+
+        // Submit Reorder Form
+        function submitReorderForm(event) {
+            event.preventDefault();
+
+            const selectedMeds = [];
+
+            // Collect selected medications (those with checked checkboxes)
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+
+            if (checkboxes.length === 0) {
+                alert("Please select at least one medication to reorder.");
+                return;
+            }
+
+            checkboxes.forEach(cb => {
+                const medId = parseInt(cb.value);
+                const medQty = parseInt(document.getElementById(`qtyToOrder-${medId}`).value);
+
+                // Ensure that quantity is greater than zero
+                if (isNaN(medQty) || medQty <= 0) {
+                    alert("Please specify a valid quantity to reorder.");
+                    return;
+                }
+
+                const med = medications.find(m => m.id === medId);
+                if (med) {
+                    selectedMeds.push({ ...med, qtyToOrder: medQty });
+                }
+            });
+
+            // If valid medications are selected, process the reorder
+            if (selectedMeds.length > 0) {
+                console.log("Selected medications to reorder:", selectedMeds);
+
+                // You can replace this with a real API call, for now it's a mock
+                alert("Order submitted successfully!");
+
+                // Reset the form
+                document.getElementById("reorderForm").reset();
+                closeReorderModal();
+            }
+        }
+
+
+ </script>
+
+
+}
+

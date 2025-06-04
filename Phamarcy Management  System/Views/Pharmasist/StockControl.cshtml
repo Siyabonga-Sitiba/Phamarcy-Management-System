@@ -1,0 +1,138 @@
+﻿@model WebApplication1.Models.ViewModels.InventoryViewModel
+
+@{
+    ViewData["Title"] = "Inventory";
+    Layout = "_PharmacistLayout";
+
+    var lowStockMeds = Model.Medication
+        .Where(m => m.Quantity.GetValueOrDefault() <= m.ReorderLevel.GetValueOrDefault())
+        .ToList();
+}
+<style>
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #f0f0f0; /* Light grey background */
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #222;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+    }
+
+    thead tr {
+        background-color: #ccc; /* Medium grey for header */
+    }
+
+    thead th {
+        padding: 12px 15px;
+        color: #333;
+        font-weight: 600;
+        text-align: left;
+        border-bottom: 2px solid #bbb;
+    }
+
+    tbody tr {
+        background: #e6e6e6; /* Light grey row background */
+        transition: background-color 0.3s ease;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+        tbody tr:hover {
+            background: #d4d4d4; /* Slightly darker grey on hover */
+        }
+
+    tbody td {
+        padding: 12px 15px;
+        border-bottom: none;
+        vertical-align: middle;
+        color: #333;
+    }
+
+    tbody tr td:first-child {
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+    }
+
+    tbody tr td:last-child {
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+    }
+
+    /* Low stock highlight - using a soft yellow */
+    .table-warning {
+        background-color: #fff3cd !important;
+        color: #856404;
+        font-weight: 600;
+    }
+
+    /* Alert box with soft red */
+    .alert {
+        background-color: #f8d7da;
+        padding: 15px 20px;
+        border-radius: 6px;
+        margin-bottom: 25px;
+        font-weight: bold;
+        color: #721c24;
+    }
+
+        .alert ul {
+            margin-top: 10px;
+            padding-left: 20px;
+            font-weight: normal;
+        }
+</style>
+
+<div class="container mt-4">
+    <h2>Current Medication Inventory</h2>
+
+    @if (lowStockMeds.Any())
+    {
+        <div class="alert alert-danger">
+            <strong>Low Stock Alert:</strong> The following medications are below their reorder level:
+            <ul>
+                @foreach (var med in lowStockMeds)
+                {
+                    <li>@med.MedicationName (Qty: @med.Quantity ?? 0)</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <table class="table table-bordered mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Dosage Form</th>
+                <th>Quantity</th>
+                <th>Expiry Date</th>
+                <th>Reorder Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var med in Model.Medication)
+            {
+                var isLowStock = med.Quantity.GetValueOrDefault() <= med.ReorderLevel.GetValueOrDefault();
+                <tr class="@(isLowStock ? "table-warning" : "")">
+                    <td>@med.MedicationName</td>
+                    <td>@med.DosageForm</td>
+                    <td>@med.Quantity ?? 0</td>
+                    <td>@med.ExpiryDate.ToString("yyyy-MM-dd")</td>
+                    <td>@med.ReorderLevel ?? 0</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

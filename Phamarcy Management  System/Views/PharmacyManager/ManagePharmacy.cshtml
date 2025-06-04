@@ -1,0 +1,198 @@
+﻿@{
+    ViewData["Title"] = "Manage SZS Pharmacy";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <h2 class="dashboard-title">SZS Pharmacy Profile</h2>
+
+    <!-- Pharmacy Profile Card -->
+    <div class="Pharmacy-card" data-aos="fade-right">
+        <img src="~/Logo/Pharmacy Picture.jpg" alt="Pharmacy Image" class="doctor-img" />
+        <div class="pharmacy-container">
+            <div class="doctor-info">
+                <h3>SZS Pharmacy</h3>
+                <p><strong>Health Council Registration No:</strong> 123456789</p>
+                <p><strong>Email:</strong> szspharmacy@szs.com</p>
+                <p><strong>Web URL:</strong> www.szspharmacy.com</p>
+                <p><strong>Responsible Pharmacist: </strong>Ms Juvinter Strattin</p>
+                <div class="button-group">
+                    <button onclick="viewPharmacyDetails()" class="btn btn-primary">🔍 Details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pharmacy Details Section -->
+    <div id="pharmacyDetails" class="details hidden">
+        <h3>Pharmacy Details</h3>
+        <div id="detailsContent" class="details-content"></div>
+        <div class="button-group">
+            <button onclick="openEditForm()" class="btn btn-warning">✏️ Edit Info</button>
+            <button onclick="goBack()" class="btn btn-secondary">🔙 Go Back</button>
+        </div>
+    </div>
+
+    <!-- Edit Modal for Pharmacy Details -->
+    <div id="editPharmacyPopup" class="modal hidden">
+        <div class="modal-content form-grid">
+            <div class="modal-header">
+                <h3>Edit Pharmacy</h3>
+                <button onclick="closePopup()" class="close-btn">✖</button>
+            </div>
+
+            <form id="editPharmacyForm" onsubmit="savePharmacyEdit(event)">
+                <h4>🏥 Company Details</h4>
+                <div class="form-row">
+                    <div class="form-group">
+
+                        <br />
+                        <input id="editCompanyName" class="input" value="SZS Pharmacy" placeholder="Company Name" required />
+                    </div>
+                    <div class="form-group">
+                        <br/>
+                        <input id="editHealthCouncilNo" class="input" value="123456789" placeholder="Health Council Registration No" required />
+                    </div>
+                </div>
+
+                <h4>🏠 Address</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <br />
+                        <input id="editStreet" class="input" value="123 Main St" placeholder="Street" required />
+                    </div>
+                    <div class="form-group">
+                        <br />
+                        <input id="editCity" class="input" value="Johannesburg" placeholder="City" required />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <br />
+                        <input id="editProvince" class="input" value="Gauteng" placeholder="Province" required />
+                    </div>
+                    <div class="form-group">
+                        <br />
+                        <input id="editCountry" class="input" value="South Africa" placeholder="Country" required />
+                    </div>
+                </div>
+
+                <h4>📞 Contact Information</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <br />
+                        <input id="editContactNumber" class="input" value="0112345678" placeholder="Contact Number" required />
+                    </div>
+                    <div class="form-group">
+                        <br />
+                        <input id="editEmail" class="input" value="szspharmacy@szs.com" placeholder="Email" required type="email" />
+                    </div>
+                </div>
+
+                <h4>👤 Responsible Pharmacist</h4>
+                <div class="form-row single">
+                    <div class="form-group full">
+                        <br />
+                        <input id="editResponsiblepharmacist" class="input" value="Ms Juvinter Strattin" placeholder="Full Names" required />
+                    </div>
+                </div>
+
+                <h4>🌐 Web URL</h4>
+                <div class="form-row single">
+                    <div class="form-group full"><br/>
+                        <input id="editWebUrl" class="input" value="www.szspharmacy.com" placeholder="Web Url" required />
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">💾 Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let pharmacy = {
+            name: "SZS Pharmacy",
+            healthCouncilNo: "123456789",
+            email: "szspharmacy@szs.com",
+            webUrl: "www.szspharmacy.com",
+            address: {
+                street: "123 Main St",
+                city: "Johannesburg",
+                province: "Gauteng",
+                country: "South Africa"
+            },
+            contactNumber: "+(013) 71 234 8749",
+            responsiblepharmacist: "Ms Juvinter Strattin",
+          
+        };
+
+        function viewPharmacyDetails() {
+            document.getElementById("pharmacyDetails").classList.remove("hidden");
+            document.getElementById("detailsContent").innerHTML = `
+                <p><strong>Address: </strong> ${pharmacy.address.street}, ${pharmacy.address.city}, ${pharmacy.address.province}, ${pharmacy.address.country}</p>
+                <p><strong>Contact Number: </strong> ${pharmacy.contactNumber}</p>
+                <p><strong>Email: </strong> ${pharmacy.email}</p>
+                <p><strong>Web URL: </strong> <a href="http://${pharmacy.webUrl}" target="_blank">${pharmacy.webUrl}</a></p>
+                <p><strong>Ressponsible Pharmacist: </strong> ${pharmacy.responsiblepharmacist}<p>
+                
+            `;
+        }
+
+        function goBack() {
+            document.getElementById("pharmacyDetails").classList.add("hidden");
+        }
+
+        function openEditForm() {
+            document.getElementById("editCompanyName").value = pharmacy.name;
+            document.getElementById("editHealthCouncilNo").value = pharmacy.healthCouncilNo;
+            document.getElementById("editStreet").value = pharmacy.address.street;
+            document.getElementById("editCity").value = pharmacy.address.city;
+            document.getElementById("editProvince").value = pharmacy.address.province;
+            document.getElementById("editCountry").value = pharmacy.address.country;
+            document.getElementById("editContactNumber").value = pharmacy.contactNumber;
+            document.getElementById("editEmail").value = pharmacy.email;
+            document.getElementById("editWebUrl").value = pharmacy.webUrl;
+            document.getElementById("editPharmacyPopup").classList.remove("hidden");
+        }
+
+        function closePopup() {
+            document.getElementById("editPharmacyPopup").classList.add("hidden");
+        }
+
+        function savePharmacyEdit(event) {
+            event.preventDefault();
+            pharmacy.name = document.getElementById("editCompanyName").value;
+            pharmacy.healthCouncilNo = document.getElementById("editHealthCouncilNo").value;
+            pharmacy.address.street = document.getElementById("editStreet").value;
+            pharmacy.address.city = document.getElementById("editCity").value;
+            pharmacy.address.province = document.getElementById("editProvince").value;
+            pharmacy.address.country = document.getElementById("editCountry").value;
+            pharmacy.contactNumber = document.getElementById("editContactNumber").value;
+            pharmacy.email = document.getElementById("editEmail").value;
+            pharmacy.webUrl = document.getElementById("editWebUrl").value;
+            pharmacy.responsiblepharmacist = document.getElementById("editResponsiblepharmacist").value;
+
+
+            alert("✅ Pharmacy details successfully updated!");
+            closePopup();
+            viewPharmacyDetails();
+        }
+
+
+
+
+             AOS.init({
+            offset: 300,
+            duration: 1400
+        });
+    </script>
+
+
+
+
+       
+}

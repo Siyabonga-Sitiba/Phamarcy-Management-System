@@ -1,22 +1,846 @@
+/* site.css */
+
+:root {
+    --bg-color: #000;
+    --snd-bg-color: #111;
+    --text-color: #fff;
+    --main-color: gold;
+    --btn-color:darkblue;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    border: none;
+    outline: none;
+    scroll-behavior: smooth;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    font-size: 70.5%;
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: whitesmoke);
+    color: var(--text-color);
+    align-content:center;
 }
+
+
+
+
+.navbar {
+    display: flex;
+    align-items: center ;
+}
+
+    .navbar a {
+        font-size: 1.8rem;
+        font-weight: 250;
+        color: var(--text-color);
+        margin-left: 4rem;
+        transition: all 0.5s ease;
+        border-bottom: 3px solid transparent;
+    }
+
+        .navbar a:hover,
+        .navbar a:active {
+            color: darkred;
+        }
+
+.nav-item {
+    position: relative;
+    margin-left: 1rem;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: darkgray;
+    min-width: 180px;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+}
+
+    .dropdown-menu li a {
+        display: block;
+        padding: 8px 0;
+        color: whitesmoke;
+        text-decoration: none;
+    }
+
+            .dropdown-menu li a:hover {
+                color: darkred;
+            }
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+/* Style for the active link in the navbar */
+nav a.active,
+.dropdown-toggle.active {
+    font-weight: bold;
+    color: var(--btn-color);
+}
+
+
+/*user picture*/
+.user-icon {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-left: 2rem;
+    cursor: pointer;
+    gap: 0.8rem; /* space between avatar and text */
+}
+
+.user-avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Container for name and role */
+.user-details {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    font-size: 1.3rem;
+    line-height: 1.2;
+    user-select: none;
+}
+
+/* User name bold */
+.user-name {
+    font-weight: 600;
+}
+
+/* User role smaller & lighter */
+.user-role {
+    font-size: 2rem;
+    color: darkblue;
+}
+
+/* Dropdown menu */
+.user-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: darkgray;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+    min-width: 140px;
+    z-index: 1000;
+}
+
+/* Show dropdown on hover */
+.user-icon:hover .user-menu {
+    display: block;
+}
+
+.user-menu li a {
+    color: whitesmoke;
+    padding: 0.5rem 0;
+    display: block;
+    font-size: 1.4rem;
+    text-decoration: none;
+}
+
+    .user-menu li a:hover {
+        color: darkred;
+    }
+
+
+section {
+    min-height: 100vh;
+    padding: 10rem 8% 2rem;
+}
+
+footer {
+    color:dimgray;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+
+/********************************Logo**************************/
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 9%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    text-decoration: none;
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease-in-out;
+}
+
+    .logo-img:hover {
+        transform: scale(1.05);
+    }
+
+
+.logo-text {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+}
+.logo-text-block {
+    display: flex;
+    flex-direction: column;
+    line-height: 4;
+}
+
+.logo-title {
+    font-size: 4.6rem;
+    font-weight: 600;
+    color: var(--text-color);
+    letter-spacing: 1px;
+}
+
+.logo-subtitle {
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--main-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+
+/***************BODY CONTENT********************/
+
+.container {
+    max-width: 1200px;
+    margin: 100px auto 0 auto; /* top margin for fixed header */
+}
+
+main {
+    text-align: center; /* if you want text/content centered */
+}
+
+
+
+/***********************************/
+/******************DASHBOARD*****************/
+/* Container for the dashboard with centered layout */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center; /* Center the content */
+}
+.pharmacy-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+
+.dashboard-title {
+    font-size: 2.5rem;
+    font-weight: 700;              /* Title's for all the pages  */
+    color: darkblue;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+}
+
+/* Grid for arranging charts in a responsive layout */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    justify-items: center; /* Centers the cards */
+}
+
+/* Individual cards containing the charts */
+.dashboard-card {
+    background-color: #ffffff;
+    border-radius: 1.25rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    width: 360px; /* Fixed width for all cards */
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ensuring the chart is centered */
+.chart-small {
+    width: 260px;
+    height: 200px;
+}
+
+/* Title for each chart inside the card */
+.chart-title {
+    font-size: 1.5rem;
+    color: #4a5568; /* Slightly muted color for text */
+    font-weight: 600;
+    text-align: center;
+    text-transform: capitalize;
+}
+.card-buttons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+    .card-buttons .btn {
+        padding: 0.5rem 1.2rem;
+        background-color: var(--btn-color, darkblue);
+        color: white;
+        border-radius: 0.4rem;
+        font-size: 1.4rem;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        .card-buttons .btn:hover {
+            background-color: darkred;
+        }
+
+
+/* Styling the chart container to center it */
+.chart-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Responsive design for the chart titles */
+@media screen and (max-width: 768px) {
+    .dashboard-title {
+        font-size: 2rem;
+    }
+
+    .chart-title {
+        font-size: 5.25rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr; /* Stack charts on smaller screens */
+        gap: 1.5rem;
+    }
+}
+
+
+/***********************************/
+
+/******************DOCTORS CSS*****************/
+
+.container {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #333; /* Dark text for good contrast */
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+
+.search-filter {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input {
+    padding: 0.5rem;
+    border: 1px solid #666;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333; /* Dark text for contrast */
+}
+
+.doctor-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    justify-items: center; /* center cards horizontally */
+    margin-top: 1rem;
+}
+
+
+.doctor-card {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #333;
+    text-align: center; /* center text inside the card */
+    width: 100%;
+    max-width: 300px;
+}
+
+/*Cointainer of viewing users more details*/
+.details {
+    background: darkgray;
+    padding: 2rem;
+    border-radius: 90px;
+    margin-top: 2rem;
+    color: white;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    justify-items :center;
+}
+
+
+.details-content p {
+    margin: 0.25rem 0;
+    font-size: 1.5rem;
+}
+
+.button-group {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.pagination {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center; 
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #007bff; /* ADD new item button */
+    color: #fff;
+}
+
+.btn-warning {
+    background-color: #ffc107; /* EDIT INFO button */
+    color: #000;
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* GO BACK button */
+    color: #fff;
+}
+
+.btn-success {
+    background-color: #28a745; /* SAVE INFO & SUBMIT button */
+    color: #fff;
+}
+
+.btn-danger {
+    background-color: #dc3545; /* Red button */
+    color: #fff;
+}
+/*****************Pharmacy Edit form modal****************/
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content.form-grid {
+    background: darkgrey;
+    padding: 30px 40px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 700px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 2rem;
+}
+
+    .modal-header h3 {
+        margin: 0;
+    }
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color:#ffff;
+}
+
+    .close-btn:hover {
+        color: darkred;
+    }
+
+
+
+h4 {
+    margin: 20px 0 10px;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+    .form-row.single {
+        justify-content: center;
+    }
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+    .form-group.full {
+        width: 100%;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+.input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+    .input:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+.form-actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+
+.disabled {
+    background-color: #ddd;
+    color: #666;
+}
+
+/* Additional color for "view doctor" button, ensuring visibility */
+.doctor-card .btn-primary {
+    background-color: darkred; /* DETAILS BUTTON */
+    color: white;
+    width:90%;
+}
+
+/* Styling the search and filter text */
+.search-filter label {
+    color: #333; /* Ensure search/filter label is visible */
+}
+
+/* Pagination button styling */
+.pagination .btn {
+    background-color: darkred; /* Blue button for page numbers */
+    color: #fff;
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+    .pagination .btn:hover {
+        background-color: darkblue; /* Darker blue for hover */
+    }
+.pagination {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+    .pagination span {
+        font-weight: bold;
+        color: darkred;
+    }
+
+
+
+
+
+/***************SYMBOLS********************/
+/*? (Plus)
+? (Minus)
+?? (Multiplication)
+? (Division)
+?? (Check mark)
+? (Cross mark)
+?? (Refresh)
+?? (Search)
+??? (Tools)
+?? (Calendar)
+?? (Clipboard)
+?? (Note)
+?? (Pin)
+?? (Paperclip)
+?? (Light bulb)
+?? (Bell)
+?? (Stop)
+?? (Fire)
+?? (Star)
+?? (Speech bubble)
+??? (Trash can)
+?? (Trash can without lid)
+?????? (Double trash cans)
+???? (Trash can with cross mark)
+??????? (Double trash cans with cross mark)
+?? (Pencil)
+?? (Memo)
+??? (Pen)
+??? (Fountain pen)
+?? (Writing hand)
+?? (Information)
+?? (Document)
+?? (Magnifying glass)
+? (Plus sign, indicating more)
+?? (Bookmark tabs)
+?? (Memo)
+?? (Floppy disk)
+?? (Inbox tray)
+?? (Mini disk)
+?? (Optical disk)
+?? (Save icon
+?????
+    
+    ?? — Pill
+Represents a capsule or tablet. Commonly used for medication or pharmaceuticals.
+
+?? — Syringe
+Represents injections, vaccines, or medical treatment.
+
+?? — Stethoscope
+Related to medical examinations or doctors.
+
+?? — Adhesive bandage
+Can symbolize minor injuries or treatment.
+
+?? — Test tube
+Often used for laboratory testing, which may be related to drug development.
+
+?? — Medical symbol (Rod of Asclepius)
+A universal symbol for health and medicine.
+
+?? — Petri dish
+Used in medical research or diagnostics.
+
+?? — DNA
+Can represent biopharmaceuticals or genetic medicine.
+
+?? 
+?? — Test Tube
+Represents chemical ingredients or lab formulations.
+
+?? — Alembic
+A historical chemistry tool; symbolizes distillation, mixing, or formulation.
+
+?? — Petri Dish
+Represents cultured ingredients or microbial components.
+
+?? — DNA Double Helix
+Suggests bio-based ingredients or genetic components.
+
+?? — Herb
+Ideal for natural or botanical ingredients in medication or supplements.
+
+??? — Thermometer
+Can imply temperature-sensitive ingredients.*/
+
+
+/***************Pharmacy********************/
+.Pharmacy-card {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #333;
+    text-align: center; /* center text inside the card */
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+}
+    .Pharmacy-card .btn-primary {
+        background-color: darkred; /* DETAILS BUTTON */
+        color: white;
+        width: 90%;
+    }
+
+/****************tables styles*******************/
+
+table {
+    width: 70%;
+    border-collapse: collapse;
+    margin: 10px auto;
+    background-color: white;
+}
+
+th {
+    background-color: darkgrey;
+}
+
+td {
+    color: black;
+}
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/
+/***********************************/

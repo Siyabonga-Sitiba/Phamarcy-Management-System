@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    ViewData["Title"] = "Generate Report";
+}
+
+<div class="max-w-md mx-auto p-6 bg-white rounded shadow mt-8">
+    <h1 class="text-2xl font-bold mb-6">Generate PDF Report</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="mb-4 p-3 bg-green-200 text-green-800 rounded">@TempData["Success"]</div>
+    }
+
+    <form asp-action="GenerateReport" method="post" class="space-y-4">
+        <div>
+            <label class="block mb-1 font-semibold">From Date</label>
+            <input type="date" name="fromDate" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+            <label class="block mb-1 font-semibold">To Date</label>
+            <input type="date" name="toDate" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+            <label class="block mb-1 font-semibold">Group By</label>
+            <select name="groupBy" class="w-full border rounded px-3 py-2" required>
+                <option value="Patient">Patient</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Medication">Medication</option>
+            </select>
+        </div>
+
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-red-800 transition">Generate Report</button>
+    </form>
+</div>

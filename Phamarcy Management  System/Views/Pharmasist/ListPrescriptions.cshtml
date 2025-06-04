@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Prescriptions";
+}
+
+<h2>Prescriptions</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Dispense</th>
+        </tr>
+    </thead>
+    <tbody id="prescriptionTableBody">
+    </tbody>
+</table>
+
+<div id="dispenseAlert" style="color: green;"></div>
+
+<script>
+    const prescriptions = [
+        {
+            id: 1,
+            patientId: "P001",
+            patientName: "John Doe",
+            doctor: "Dr. Smith",
+            date: "2025-05-23",
+            medications: [
+                { name: "Amoxicillin", qty: 10, instructions: "Take twice daily", repeats: 1 }
+            ],
+            status: "New"
+        },
+        {
+            id: 2,
+            patientId: "P002",
+            patientName: "Jane Smith",
+            doctor: "Dr. Adams",
+            date: "2025-05-20",
+            medications: [
+                { name: "Ibuprofen", qty: 5, instructions: "Once after meals", repeats: 0 }
+            ],
+            status: "New"
+        }
+    ];
+
+    const allergies = {
+        "P001": ["Penicillin"],
+        "P002": ["Ibuprofen"]
+    };
+
+    function loadPrescriptions() {
+        const tbody = document.getElementById("prescriptionTableBody");
+        tbody.innerHTML = "";
+        prescriptions.forEach(p => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${p.id}</td>
+                <td>${p.patientName}</td>
+                <td>${p.doctor}</td>
+                <td>${p.date}</td>
+                <td><span class="badge">${p.status}</span></td>
+                <td><button onclick="dispense(${p.id})">Dispense</button></td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function dispense(id) {
+        const pres = prescriptions.find(p => p.id === id);
+        const allergyList = allergies[pres.patientId] || [];
+
+        for (const med of pres.medications) {
+            const ingredients = getIngredients(med.name);
+            if (ingredients.some(i => allergyList.includes(i))) {
+                document.getElementById("dispenseAlert").innerText =
+                    "⚠️ Cannot dispense: allergy detected.";
+                return;
+            }
+            if (med.repeats <= 0) {
+                document.getElementById("dispenseAlert").innerText =
+                    "⚠️ Cannot dispense: no repeats left.";
+                return;
+            }
+            med.repeats -= 1;
+        }
+
+        pres.status = "Dispensed";
+        document.getElementById("dispenseAlert").innerText = "✅ Prescription dispensed. Email sent.";
+        loadPrescriptions();
+    }
+
+    function getIngredients(medName) {
+        const map = {
+            "Amoxicillin": ["Penicillin"],
+            "Ibuprofen": ["Ibuprofen"],
+            "Cetirizine": ["Cetirizine"]
+        };
+        return map[medName] || [];
+    }
+
+    loadPrescriptions();
+</script>
+
+

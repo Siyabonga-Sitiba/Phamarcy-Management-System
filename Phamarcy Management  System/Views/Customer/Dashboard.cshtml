@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Customer Dashboard";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+    var customerName = ViewBag.CustomerName ?? "Customer";
+}
+<div class="max-w-7xl mx-auto p-8">
+    <!-- Welcome Banner -->
+    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl shadow p-8 text-center mb-16 mt-10">
+        <h1 class="text-4xl md:text-5xl font-bold">Welcome, @customerName!</h1>
+        <p class="mt-2 text-lg">This is your personal dashboard. Track your prescriptions, manage repeats, and stay updated.</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white shadow-md rounded-2xl p-6 text-center">
+            <h2 class="text-lg font-semibold text-gray-700">Total Prescriptions</h2>
+            <p class="text-5xl font-bold text-blue-600 mt-2">18</p>
+            
+
+        </div>
+        <div class="bg-white shadow-md rounded-2xl p-6 text-center">
+            <h2 class="text-lg font-semibold text-gray-700">Repeats Left</h2>
+            
+            <p class="text-5xl font-bold text-green-600 mt-2">5</p>
+
+        </div>
+        <div class="bg-white shadow-md rounded-2xl p-6 text-center">
+            <h2 class="text-lg font-semibold text-gray-700">Notifications</h2>
+            <p class="text-md text-gray-600 mt-2">📩 You’ll get an email when your prescription is ready.</p>
+        </div>
+    </div>
+
+    <!-- Graph/Chart Section -->
+    <!-- Graph/Chart Section -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-10">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">Prescription Trends</h3>
+        <div class="w-full h-56">
+            <canvas id="prescriptionChart" class="w-full h-full"></canvas>
+        </div>
+    </div>
+
+
+
+    <!-- Action Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 shadow hover:shadow-md transition">
+            <h4 class="text-xl font-semibold text-emerald-800 mb-2">Upload New Prescription</h4>
+            <p class="text-sm text-emerald-600 mb-4">Quickly submit a new script and receive your meds faster.</p>
+            <a href="/Prescription/Upload" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-800 transition">Upload Now</a>
+        </div>
+        <div class="bg-teal-50 border border-teal-200 rounded-2xl p-6 shadow hover:shadow-md transition">
+            <h4 class="text-xl font-semibold text-teal-800 mb-2">Manage Repeats</h4>
+            <p class="text-sm text-teal-600 mb-4">View, reorder, or cancel your repeat prescriptions.</p>
+            <a href="/Customer/ManageRepeats" class="inline-block bg-teal-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-800 transition">Manage Repeats</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('prescriptionChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Prescriptions',
+                    data: [3, 4, 2, 5, 6, 3],
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    borderWidth: 2,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

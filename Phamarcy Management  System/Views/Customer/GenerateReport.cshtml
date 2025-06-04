@@ -1,0 +1,116 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<div class="max-w-7xl mx-auto px-6 mt-40 mb-10">
+
+    <!-- Header -->
+    <div class="mb-10 text-center">
+      
+        <p class="text-gray-700 mt-2">View and export prescription activity within a selected time range.</p>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-10">
+        <form method="get" action="/Customer/GenerateReport" class="grid md:grid-cols-4 gap-4 items-end">
+            <div>
+                <label class="text-sm font-medium text-gray-900">From</label>
+                <input type="date" name="from"
+                       class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-black" required>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-900">To</label>
+                <input type="date" name="to"
+                       class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-black" required>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-900">Group By</label>
+                <select name="groupBy"
+                        class="mt-1 w-full rounded-lg border-gray-300 shadow-sm text-black" required>
+                    <option value="Patient" class="text-black">Patient</option>
+                    <option value="Doctor" class="text-black">Doctor</option>
+                    <option value="Medication" class="text-black">Medication</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit"
+                        class="w-full bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-red-800 font-semibold">
+                    🧾 Generate PDF
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Report Table -->
+    <div class="bg-white rounded-2xl shadow-md p-6">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Grouped by: <span class="text-teal-700">Patient</span></h2>
+
+        <div class="space-y-10">
+            <!-- Group Block: Leana Deebb -->
+            <div>
+                <h3 class="text-xl font-semibold text-emerald-800 mb-1">👤 Leana Deebb</h3>
+                <p class="text-sm text-gray-600 mb-3">Date range: 2025-04-01 → 2025-05-10</p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto border rounded-xl text-sm text-left">
+                        <thead class="bg-gray-400 text-white">
+                            <tr>
+                                <th class="p-3">Date</th>
+                                <th class="p-3">Doctor</th>
+                                <th class="p-3">Medication</th>
+                                <th class="p-3">Dosage</th>
+                                <th class="p-3">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y text-gray-900">
+                            <tr>
+                                <td class="p-3">2025-05-10</td>
+                                <td class="p-3">Dr. Smith</td>
+                                <td class="p-3">Amoxicillin</td>
+                                <td class="p-3">500mg</td>
+                                <td class="p-3">14</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3">2025-04-15</td>
+                                <td class="p-3">Dr. Adams</td>
+                                <td class="p-3">Ibuprofen</td>
+                                <td class="p-3">200mg</td>
+                                <td class="p-3">30</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Group Block: Erika Holguinn -->
+            <div>
+                <h3 class="text-xl font-semibold text-emerald-800 mb-1">👤 Erika Holguinn</h3>
+                <p class="text-sm text-gray-600 mb-3">Date range: 2025-05-01 → 2025-05-01</p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto border rounded-xl text-sm text-left">
+                        <thead class="bg-gray-400 text-white">
+                            <tr>
+                                <th class="p-3">Date</th>
+                                <th class="p-3">Doctor</th>
+                                <th class="p-3">Medication</th>
+                                <th class="p-3">Dosage</th>
+                                <th class="p-3">Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y text-gray-900">
+                            <tr>
+                                <td class="p-3">2025-05-01</td>
+                                <td class="p-3">Dr. Brown</td>
+                                <td class="p-3">Metformin</td>
+                                <td class="p-3">850mg</td>
+                                <td class="p-3">60</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

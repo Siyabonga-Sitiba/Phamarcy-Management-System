@@ -1,0 +1,728 @@
+﻿@{
+    ViewData["Title"] = "Manage Medication Records";
+    Layout = "_Layout";
+}
+
+
+
+<div class="container" data-aos="fade-right">
+    <h2 class="dashboard-title">Manage Medication Records</h2>
+
+    <!-- Search & Filter -->
+    <div class="toolbar">
+        <button class="btn btn-primary" onclick="openAddModal()">➕ Add New Medication</button>
+
+        <div class="search-filter">
+            <input type="text" id="searchInput" placeholder="Search Medication" class="input" oninput="renderIngredients()">
+            <select id="statusFilter" class="input" onchange="renderIngredients()">
+                <option value="All">Filter by Dosage Form</option>
+                <option value="Tablet">Tablet</option>
+                <option value="Capsule">Capsule</option>
+                <option value="Liquid">Liquid</option>
+                <option value="Syrup">Syrup</option>
+                <option value="Injection">Injection</option>
+                <option value="Ointment">Ointment</option>
+                <option value="Suppository">Suppository</option>
+                <option value="Inhaler">Inhaler</option>
+            </select>
+        </div>
+    </div>
+
+   
+
+    <!-- Ingredients Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>Medication Name</th>
+                <th>Schedule</th>
+                <th>Active Ingredient</th>
+                <th>Quantity</th>
+                <th>ReOrder Level</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="ingredientList"></tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div id="pagination" class="pagination"></div>
+</div>
+
+<!-- Add Modal -->
+<div class="modal hidden" id="addModal" data-aos="fade-left">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add New Medication</h3>
+            <button class="close-btn" onclick="closeAddModal()">×</button>
+        </div>
+        <form onsubmit="submitNewIngredient(event)">
+            <div class="form-grid">
+                <input type="text" id="addName" class="input" placeholder="Medication Name" required>
+
+                <select id="adddosageform" class="input" required>
+                    <option value="">Select Dosage Form</option>
+                    <option value="Tablet">Tablet</option>
+                    <option value="Capsule">Capsule</option>
+                    <option value="Syrup">Syrup</option>
+                    <option value="Injection">Injection</option>
+                    <option value="Ointment">Ointment</option>
+                    <option value="Suppository">Suppository</option>
+                    <option value="Inhaler">Inhaler</option>
+                </select>
+
+                <input type="text" id="addSchedule" class="input" placeholder="Schedule" required>
+                <input type="number" id="addQuantity" class="input" placeholder="Quantity" required>
+                <input type="number" id="addReorderLevel" class="input" placeholder="ReOrder Level" required>
+                <input type="number" id="addPrice" class="input" placeholder="Price" required>
+
+                <select id="addSupplier" class="input" required>
+                    <option value="">Select Supplier</option>
+                    <option value="MediSupply">MediSupply</option>
+                    <option value="PPE Central">PPE Central</option>
+                    <option value="HealthEquip Co">HealthEquip Co</option>
+                    <option value="SafeGuard Suppliers">SafeGuard Suppliers</option>
+                    <option value="LabNation">LabNation</option>
+                    <option value="PharmaLink">PharmaLink</option>
+                    <option value="BioTech Solutions">BioTech Solutions</option>
+                    <option value="VitaCare">VitaCare</option>
+                    <option value="CleanMed Supplies">CleanMed Supplies</option>
+                    <option value="CareWell Partners">CareWell Partners</option>
+                </select>
+                <select id="addStatus" class="input" required>
+                    <option value="">Status</option>
+                    <option value="true">In Stock</option>
+                    <option value="false">Out Of Stock</option>
+                </select>
+            </div>
+
+            <h4>Active Ingredients</h4>
+            <br/>
+            <div id="ingredientFields"></div>
+            <div class="button-group">
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal hidden" id="editModal" data-aos="fade-left">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Medication</h3>
+            <button class="close-btn" onclick="closeEditModal()">×</button>
+        </div>
+        <form onsubmit="saveIngredientEdit(event)">
+            <div class="form-grid">
+                <input type="text" id="editName" class="input" placeholder="Medication Name" required>
+
+                <select id="editDosageForm" class="input" required>
+                    <option value="">Select Dosage Form</option>
+                    <option value="Tablet">Tablet</option>
+                    <option value="Capsule">Capsule</option>
+                    <option value="Syrup">Syrup</option>
+                    <option value="Injection">Injection</option>
+                    <option value="Ointment">Ointment</option>
+                    <option value="Suppository">Suppository</option>
+                    <option value="Inhaler">Inhaler</option>
+                </select>
+
+                <input type="text" id="editSchedule" class="input" placeholder="Schedule" required>
+                <input type="number" id="editQuantity" class="input" placeholder="Quantity" required>
+                <input type="number" id="editReorderLevel" class="input" placeholder="ReOrder Level" required>
+                <input type="number" id="editPrice" class="input" placeholder="Price" required>
+                <select id="editSupplier" class="input" required>
+                    <option value="">Select Supplier</option>
+                    <option value="MediSupply">MediSupply</option>
+                    <option value="PPE Central">PPE Central</option>
+                    <option value="HealthEquip Co">HealthEquip Co</option>
+                    <option value="SafeGuard Suppliers">SafeGuard Suppliers</option>
+                    <option value="LabNation">LabNation</option>
+                    <option value="PharmaLink">PharmaLink</option>
+                    <option value="BioTech Solutions">BioTech Solutions</option>
+                    <option value="VitaCare">VitaCare</option>
+                    <option value="CleanMed Supplies">CleanMed Supplies</option>
+                    <option value="CareWell Partners">CareWell Partners</option>
+                </select>
+
+                <select id="editStatus" class="input" required>
+                    <option value="">Status</option>
+                    <option value="true">In Stock</option>
+                    <option value="false">Out Of Stock</option>
+                </select>
+            
+            </div>
+
+            <h4>Edit Active Ingredients</h4>
+            <br />
+            <div id="editIngredientFields"></div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- Details Modal -->
+<div class="modal hidden" id="detailsModal" data-aos="fade-left">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Medication Details</h3>
+            <button class="close-btn" onclick="closeDetailsModal()">×</button>
+        </div>
+        <div id="detailsContent"></div>
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="closeDetailsModal()">Go Back</button>
+            <button class="btn btn-success" onclick="openEditModal(selectedIngredient.id)">✏️Edit</button>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+        .modal.hidden {
+            display: none;
+        }
+
+    .modal-content {
+        background: darkgrey;
+        padding: 30px;
+        border-radius: 8px;
+        width: 600px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        font-family: Arial, sans-serif;
+    }
+
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+        .close-btn:hover {
+            color: darkred;
+        }
+
+    h4 {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+        .form-grid.single {
+            grid-template-columns: 1fr;
+        }
+
+    .input {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 100%;
+    }
+
+        .input:invalid {
+            border-color: #dc3545;
+        }
+
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: mediumaquamarine;
+        color: white;
+    }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            opacity: 0.9;
+        }
+
+    .container {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .search-filter {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    table {
+        width: 70%;
+        border-collapse: collapse;
+        margin: 10px auto;
+        background-color: white;
+    }
+
+    th, td {
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        justify-content: center;
+    }
+
+    .pagination {
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+
+        .pagination span {
+            font-weight: bold;
+            color: darkred;
+        }
+
+
+    .ingredient-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+        .ingredient-row select,
+        .ingredient-row input {
+            flex: 1;
+        }
+
+        .ingredient-row button {
+            flex: 0 0 auto;
+        }
+
+   
+</style>
+
+
+
+
+@section Scripts {
+    <script>
+                            let ingredients = [
+            { id: 1, name: "Paracetamol", dosageForm: "Tablet", schedule: "II", quantity: 30, reorderLevel: 50, price: 55,
+              ingredients: [{ ingredient: "Paracetamol", strength: 50 }] },
+
+            { id: 2, name: "Ibuprofen", dosageForm: "Capsule", schedule: "II", quantity: 20, reorderLevel: 50, price: 30,
+              ingredients: [{ ingredient: "Ibuprofen", strength: 20 },
+              {ingredient: "Oxycine",  strength:"500"}] },
+
+            { id: 3, name: "Aspirin", dosageForm: "Effervescent Tablet", schedule: "I", quantity: 25, reorderLevel: 50, price: 70,
+              ingredients: [{ ingredient: "Aspirin", strength: 32 }] },
+
+            { id: 4, name: "Cetirizine", dosageForm: "Syrup", schedule: "II", quantity: 85, reorderLevel: 50, price: 40,
+              ingredients: [{ ingredient: "Cetirizine", strength: 10 },
+              {ingredient: "Aspirin",  strength:"100"}]},
+
+            { id: 5, name: "Amoxicillin", dosageForm: "Capsule", schedule: "IV", quantity: 80, reorderLevel: 50, price: 60,
+              ingredients: [{ ingredient: "Amoxicillin", strength: 25 }] },
+
+            { id: 6, name: "Metformin", dosageForm: "Extended-release Tablet", schedule: "III", quantity: 60, reorderLevel: 50, price: 70,
+              ingredients: [{ ingredient: "Metformin", strength: 50 }] },
+
+            { id: 7, name: "Atorvastatin", dosageForm: "Tablet", schedule: "III", quantity: 65, reorderLevel: 50, price: 80,
+              ingredients: [{ ingredient: "Atorvastatin", strength: 20 }] }
+        ];
+
+
+        let currentPage = 1;
+        const perPage = 4;
+        let selectedIngredient = null;
+
+        // Function to render ingredients with pagination
+        function renderIngredients() {
+            const search = document.getElementById("searchInput").value.toLowerCase();
+            const filter = document.getElementById("statusFilter").value;
+            const listEl = document.getElementById("ingredientList");
+            const paginationEl = document.getElementById("pagination");
+
+             const filtered = ingredients.filter(i =>
+            i.name.toLowerCase().includes(search) &&
+            (filter === "All" || i.dosageForm === filter)
+        );
+
+            const start = (currentPage - 1) * perPage;
+            const paged = filtered.slice(start, start + perPage);
+
+            listEl.innerHTML = paged.map(i => `
+                <tr>
+                    <td>${i.name}</td>
+                    <td>${i.schedule}</td>
+                    <td>
+            ${i.ingredients && i.ingredients.length
+                ? i.ingredients.map(ai => `${ai.ingredient} (${ai.strength} mg)`).join(", ")
+                : "—"}
+        </td>
+
+                    <td>${i.quantity}</td>
+                    <td>${i.reorderLevel}</td>
+                    <td>R${i.price}</td>
+                    <td>
+                        <button class="btn btn-success" onclick="openEditModal(${i.id})">Edit</button>
+                        <button class="btn btn-danger" onclick="confirmDelete(${i.id})">Remove</button>
+                        <button class="btn btn-secondary" onclick="openDetailsModal(${i.id})">Details</button>
+                    </td>
+                </tr>
+            `).join("");
+
+            paginationEl.innerHTML = "";
+
+            // Page indicator
+            const totalPages = Math.ceil(filtered.length / perPage);
+            paginationEl.innerHTML += `<span style="color: darkred">Page ${currentPage} of ${totalPages || 1}</span>`;
+
+            // Page buttons
+            for (let i = 1; i <= totalPages; i++) {
+                paginationEl.innerHTML += `<button onclick="goToPage(${i})" class="btn ${i === currentPage ? 'btn-primary' : 'btn-secondary'}">${i}</button>`;
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderIngredients();
+        }
+
+        // Function to handle adding/editing ingredients in modals
+        function openAddModal() {
+            document.getElementById("addName").value = "";
+            document.getElementById("adddosageform").value = "";
+            document.getElementById("addSchedule").value = "";
+            document.getElementById("addQuantity").value = "";
+            document.getElementById("addReorderLevel").value = "";
+            document.getElementById("addPrice").value = "";
+            document.getElementById("ingredientFields").innerHTML = '';  // Clear any previous rows
+            addIngredientRow(); // Initialize with one row
+            document.getElementById("addModal").classList.remove("hidden");
+        }
+
+        function closeAddModal() {
+            document.getElementById("addModal").classList.add("hidden");
+        }
+            
+            //edit modal
+            function openEditModal(id) {
+            const med = ingredients.find(i => i.id === id);
+            if (!med) return alert("Medication not found.");
+
+            selectedIngredient = med;
+
+            document.getElementById("editName").value = med.name;
+            document.getElementById("editDosageForm").value = med.dosageForm;
+            document.getElementById("editSchedule").value = med.schedule;
+            document.getElementById("editQuantity").value = med.quantity;
+            document.getElementById("editReorderLevel").value = med.reorderLevel;
+            document.getElementById("editPrice").value = med.price;
+            document.getElementById("editSupplier").value = med.supplier || "";
+            document.getElementById("editStatus").value = med.status ? "true" : "false";
+
+
+            // Populate ingredients
+            const container = document.getElementById("editIngredientFields");
+            container.innerHTML = '';
+            (med.ingredients || []).forEach(ingredient => {
+                const row = createEditIngredientRow(ingredient.ingredient, ingredient.strength);
+                container.appendChild(row);
+            });
+
+            if (med.ingredients.length === 0) {
+                container.appendChild(createEditIngredientRow());
+            }
+
+            document.getElementById("editModal").classList.remove("hidden");
+        }
+
+        function createEditIngredientRow(ingredientVal = "", strengthVal = "") {
+            const row = document.createElement("div");
+            row.className = "ingredient-row";
+
+            const select = document.createElement("select");
+            select.className = "input";
+            select.required = true;
+
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Active Ingredient";
+            select.appendChild(defaultOption);
+
+            [...new Set(ingredients.map(i => i.name))].forEach(name => {
+                const option = document.createElement("option");
+                option.value = name;
+                option.text = name;
+                select.appendChild(option);
+            });
+            select.value = ingredientVal;
+
+            const input = document.createElement("input");
+            input.type = "number";
+            input.placeholder = "Strength (mg)";
+            input.className = "input";
+            input.required = true;
+            input.value = strengthVal;
+
+            const addBtn = document.createElement("button");
+            addBtn.type = "button";
+            addBtn.className = "btn btn-secondary";
+            addBtn.textContent = "➕";
+            addBtn.onclick = () => {
+                document.getElementById("editIngredientFields").appendChild(createEditIngredientRow());
+            };
+
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "btn btn-danger";
+            removeBtn.textContent = "➖";
+            removeBtn.onclick = () => row.remove();
+
+            row.appendChild(select);
+            row.appendChild(input);
+            row.appendChild(addBtn);
+            row.appendChild(removeBtn);
+
+            return row;
+        }
+
+        function saveIngredientEdit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("editName").value.trim();
+            const dosageForm = document.getElementById("editDosageForm").value.trim();
+            const schedule = document.getElementById("editSchedule").value.trim();
+            const quantity = Number(document.getElementById("editQuantity").value.trim());
+            const reorderLevel = Number(document.getElementById("editReorderLevel").value.trim());
+            const price = Number(document.getElementById("editPrice").value.trim());
+
+            const ingredientRows = document.querySelectorAll('#editIngredientFields .ingredient-row');
+            const ingredientsList = [];
+            ingredientRows.forEach(row => {
+                const ingredient = row.querySelector('select').value;
+                const strength = row.querySelector('input').value;
+                if (ingredient && strength) {
+                    ingredientsList.push({ ingredient, strength: Number(strength) });
+                }
+            });
+
+            if (!name || !schedule || !dosageForm || !quantity || !reorderLevel || !price || ingredientsList.length === 0) {
+                alert("⚠️ Please fill out all required fields.");
+                return;
+            }
+
+            // Update the object
+            selectedIngredient.name = name;
+            selectedIngredient.schedule = schedule;
+            selectedIngredient.dosageForm = dosageForm;
+            selectedIngredient.quantity = quantity;
+            selectedIngredient.reorderLevel = reorderLevel;
+            selectedIngredient.price = price;
+            selectedIngredient.ingredients = ingredientsList;
+
+            renderIngredients();
+            alert("✅ Medication updated!");
+            closeEditModal();
+        }
+
+        function closeEditModal() {
+            document.getElementById("editModal").classList.add("hidden");
+        }
+
+        // Function to add a row for an ingredient and its strength
+               function addIngredientRow() {
+            const container = document.getElementById("ingredientFields");
+
+            const row = document.createElement("div");
+            row.className = "ingredient-row";
+
+            // Ingredient dropdown
+            const select = document.createElement("select");
+            select.className = "input";
+            select.required = true;
+
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.text = "Active Ingredient";
+            select.appendChild(defaultOption);
+
+            // Populate from unique ingredient names in existing data
+            [...new Set(ingredients.map(i => i.name))].forEach(name => {
+                const option = document.createElement("option");
+                option.value = name;
+                option.text = name;
+                select.appendChild(option);
+            });
+
+            // Strength input
+            const input = document.createElement("input");
+            input.type = "number";
+            input.placeholder = "Strength (mg)";
+            input.className = "input";
+            input.required = true;
+
+            // Add button
+            const addBtn = document.createElement("button");
+            addBtn.type = "button";
+            addBtn.className = "btn btn-secondary";
+            addBtn.textContent = "➕";
+            addBtn.onclick = addIngredientRow;
+
+            // Remove button
+               row.appendChild(select);
+        row.appendChild(input);
+        row.appendChild(addBtn);
+
+        // Only add the ➖ button if there is more than one row
+        if (container.childElementCount > 0) {
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "btn btn-danger";
+            removeBtn.textContent = "➖";
+            removeBtn.onclick = () => {
+                row.remove();
+                // Re-check if only one row remains and update buttons accordingly
+                const rows = container.querySelectorAll(".ingredient-row");
+                if (rows.length === 1) {
+                    const lastRow = rows[0];
+                    const lastRemoveBtn = lastRow.querySelector(".btn-danger");
+                    if (lastRemoveBtn) lastRemoveBtn.remove();
+                }
+            };
+            row.appendChild(removeBtn);
+        }
+            container.appendChild(row);
+        }
+
+
+        // Handle adding new ingredients and submitting form
+                function submitNewIngredient(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("addName").value.trim();
+            const dosageForm = document.getElementById("adddosageform").value.trim();
+            const schedule = document.getElementById("addSchedule").value.trim();
+            const quantity = document.getElementById("addQuantity").value.trim();
+            const reorderLevel = document.getElementById("addReorderLevel").value.trim();
+            const price = document.getElementById("addPrice").value.trim();
+            const supplier = document.getElementById("addSupplier").value.trim();
+            const status = document.getElementById("addStatus").value === "true";
+
+            const ingredientsList = [];
+            const ingredientRows = document.querySelectorAll('.ingredient-row');
+            ingredientRows.forEach(row => {
+                const ingredient = row.querySelector('select').value;
+                const strength = row.querySelector('input').value;
+                ingredientsList.push({ ingredient, strength: Number(strength) });
+            });
+
+            if (!name || !schedule || !dosageForm || !quantity || !reorderLevel || !price || !supplier || ingredientsList.length === 0) {
+                alert("⚠️ All fields are required.");
+                return;
+            }
+
+            const newIngredient = {
+                id: ingredients.length ? Math.max(...ingredients.map(i => i.id)) + 1 : 1,
+                name,
+                schedule,
+                dosageForm,
+                quantity: Number(quantity),
+                reorderLevel: Number(reorderLevel),
+                price: Number(price),
+                supplier,
+                status,
+                ingredients: ingredientsList
+            };
+
+            ingredients.push(newIngredient);
+
+            const newId = newIngredient.id;
+
+            const filtered = ingredients.filter(i =>
+                i.name.toLowerCase().includes(document.getElementById("searchInput").value.toLowerCase()) &&
+                (document.getElementById("statusFilter").value === "All" || i.dosageForm === document.getElementById("statusFilter").value)
+            );
+
+            const indexInFiltered = filtered.findIndex(i => i.id === newId);
+            currentPage = Math.floor(indexInFiltered / perPage) + 1;
+
+            renderIngredients(newId);
+            alert("✅ Medication successfully added!");
+            closeAddModal();
+        }
+
+
+        // Initial render of ingredients
+        renderIngredients();
+
+        AOS.init({
+            offset: 300,
+            duration: 1400
+        });
+
+    </script>
+}

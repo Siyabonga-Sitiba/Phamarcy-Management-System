@@ -1,0 +1,65 @@
+﻿@model Phamarcy_Management__System.Models.Customer  
+
+@{
+    ViewData["Title"] = "Customer Registration";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+@{
+    ViewData["Title"] = "Customer Registration";
+}
+
+<div class="container mt-5">
+    <div class="mx-auto" style="max-width: 500px;">
+        <h3 class="text-center mb-4">
+            <i class="fas fa-user-plus text-primary"></i> Register
+        </h3>
+
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" name="Name" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Surname</label>
+                <input type="text" class="form-control" name="Surname" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">ID Number</label>
+                <input type="text" class="form-control" name="IDNumber" required
+                       pattern="^\d{13}$" title="ID Number must be exactly 13 digits">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cellphone Number</label>
+                <input type="text" class="form-control" name="Cellphone" required
+                       pattern="^\d{10}$" title="Cellphone number must be exactly 10 digits">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-control" name="Email" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Allergies</label>
+                <select class="form-select" name="Allergies">
+                    <option value="">-- No Allergy --</option>
+                    <option value="Penicillin">Penicillin</option>
+                    <option value="Sulfa Drugs">Sulfa Drugs</option>
+                    <option value="Aspirin">Aspirin</option>
+                    <option value="Ibuprofen">Ibuprofen</option>
+                    <option value="Codeine">Codeine</option>
+                </select>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-user-check"></i> Register
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

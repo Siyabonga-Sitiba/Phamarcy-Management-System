@@ -3,43 +3,69 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Phamarcy_Management__System</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>Pharmacy Management System</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Phamarcy_Management__System.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- AOS CSS -->
+
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Ibhayi Phamarcy</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Manage" asp-action="Manage">Manage</a>
-                        </li>
-                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Medication" asp-action="Medication">Medication</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Stock" asp-action="Stock">Stock</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Report" asp-action="Report">Report</a>
-                        </li>
+        <div class="header-container">
+            <!-- Logo and Navigation -->
+            <a asp-area="" asp-controller="PharmacyManager" asp-action="Dashboard" class="logo-container">
+                <img  src="~/Logo/Szs Pharmacy Logo.png" alt="Pharmacy Logo" class="logo-img" />
+                <span class="logo-text">SZS <span style="color:darkblue">Pharmacy</span></span>
+            </a>
+
+            <nav class="navbar">
+                <a asp-area="" asp-controller="PharmacyManager" asp-action="Dashboard">Dashboard</a>
+                <div  class="nav-item dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-target="manageDropdown">Manage ▾</a>
+                    <ul id="manageDropdown" class="dropdown-menu">
+                        <li><a asp-controller="PharmacyManager" asp-action="ManageDoctors">Manage Doctors</a></li>
+                        <li><a asp-controller="PharmacyManager" asp-action="ManagePharmacist">Manage Pharmacists</a></li>
+                        <li><a asp-controller="PharmacyManager" asp-action="ManagePharmacy">Manage Pharmacy</a></li>
+                        <li><a asp-controller="PharmacyManager" asp-action="ManageSuppliers">Manage Suppliers</a></li>
                     </ul>
                 </div>
+
+                <div class="nav-item dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-target="medicationDropdown">Medication ▾</a>
+                    <ul id="medicationDropdown" class="dropdown-menu">
+                        <li><a asp-controller="PharmacyManager" asp-action="ManageActiveIngredients">Active Ingredients</a></li>
+                        <li><a asp-controller="PharmacyManager" asp-action="ManageDosageForm">Dosage Form</a></li>
+                        <li><a asp-controller="PharmacyManager" asp-action="ManageMedicationRecords">Medication Records</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-item dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-target="stockDropdown">Stock ▾</a>
+                    <ul id="stockDropdown" class="dropdown-menu">
+                        <li><a asp-area="" asp-controller="PharmacyManager" asp-action="StockRecords">Stock Records</a></li>
+                        <li><a asp-area="" asp-controller="PharmacyManager" asp-action="StockOrders">Stock Orders</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="user-icon dropdown">
+                <img src="~/Logo/User-Icon.jpg" alt="User Icon" class="user-avatar" />
+                <div class="user-details">
+                    <span class="user-name">Siyabonga Sitiba</span>
+                    <span class="user-role">Pharmacy Manager</span>
+                </div>
+                <ul class="dropdown-menu user-menu">
+                    <li><a asp-controller="Account" asp-action="Profile">View Profile</a></li>
+                   <li><a asp-controller="Pharmacy" asp-action="PharmacistLandingPage">Logout</a></li>
+                </ul>
             </div>
-        </nav>
+
+        </div>
     </header>
-    <div class="container">
+
+    <div class="container" style="margin-top: 100px;">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -47,12 +73,13 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - Phamarcy_Management__System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - Pharmacy Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Add this before the closing </body> tag -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

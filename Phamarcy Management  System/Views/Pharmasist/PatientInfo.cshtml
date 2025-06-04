@@ -1,0 +1,292 @@
+﻿@model Phamarcy_Management__System.Models.PharmacistModels.PrescriptionUploadViewModel
+@{
+   
+    ViewData["Title"] = "Create Patient Profile";
+}
+ 
+@{
+    Layout = "_PharmacistLayout";
+}
+  <style>
+    .patient-info-page h1,
+
+    .patient-info-page h3,
+    .patient-info-page h4,
+    .upload-prescription-page h1,
+    .upload-prescription-page h2,
+    .upload-prescription-page h3,
+    .upload-prescription-page h4 {
+        font-size: 1.8rem; /* bigger size */
+        color: white; /* white text */
+        font-weight: 600; /* optional, bolder */
+    }
+
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+        .modal.hidden {
+            display: none;
+        }
+
+    .modal-content {
+        background: darkgrey;
+        padding: 30px;
+        border-radius: 8px;
+        width: 70%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        font-family: Arial, sans-serif;
+        margin: 30px auto;
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2px;
+    }
+
+        .modal-header h3 {
+            margin: 0;
+        }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+        .close-btn:hover {
+            color: darkred;
+        }
+
+    h5 {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+        .form-grid.single {
+            grid-template-columns: 1fr;
+        }
+
+    .input {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 100%;
+    }
+
+        .input:invalid {
+            border-color: #dc3545;
+        }
+
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .doctor-details-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0;
+    }
+
+    .doctor-img {
+        width: 300px;
+        height: 300px;
+        border-radius: 1%;
+        object-fit: cover;
+    }
+
+    .doctor-info {
+        display: flex;
+        flex-direction: column;
+        color: #333;
+    }
+
+    /***************more details of added profiles***************/
+    .details {
+        background: darkgrey;
+        padding: 30px;
+        border-radius: 8px;
+        width: 70%;
+        margin: 30px auto;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .details-content {
+        margin-top: 15px;
+        line-height: 1.8;
+        color: #333;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: black;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+</style>
+<body class="patient-info-page">
+    <!-- Patient Profile Form -->
+    <div class="modal-content" style="margin: 30px auto; width: 70%;">
+        <h2 style="text-align:center; color: whitesmoke; font-size: 2.5rem;">
+            Create New Profile
+        </h2>
+
+
+
+        <form onsubmit="submitPatientForm(event)">
+            <h5 style="font-size: 1.8rem; color: white;">👤 Personal Details</h5>
+            <div class="form-grid">
+                <input id="FirstName" class="input" placeholder="First Name" required />
+                <input id="LastName" class="input" placeholder="Last Name" required />
+            </div>
+
+            <div class="form-grid">
+                <input id="DOB" type="date" class="input" required />
+                <select id="Gender" class="input">
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <h5 style="font-size: 1.8rem; color: white;">📞 Contact Details</h5>
+            <div class="form-grid">
+                <input id="Phone" class="input" placeholder="Phone" />
+                <input id="Email" type="email" class="input" placeholder="Email" />
+            </div>
+            <div class="form-grid">
+
+                <input id="ImageUpload" type="file" class="input" />
+            </div>
+
+            <h5 style="font-size: 1.8rem; color: white;">💊 Medical Info</h5>
+            <div class="form-grid single">
+                <textarea id="Allergies" class="input" placeholder="Allergies (comma-seperated)" rows="2"></textarea>
+
+            </div>
+
+            <h5 style="font-size: 1.8rem; color: white;">🚨 Emergency Contact</h5>
+            <div class="form-grid">
+                <input id="EmergencyContact" class="input" placeholder="Contact Name" />
+                <input id="EmergencyPhone" class="input" placeholder="Contact Phone" />
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">💾 Create Profile</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Patient Details Section (Structured View like Doctor) -->
+    <div id="patientDetails" class="details hidden">
+        <h3>Patient Details</h3>
+        <div id="patientDetailsContent" class="details-content">
+            <!-- Populated dynamically -->
+        </div>
+        <div class="button-group">
+            <button onclick="openEditForm()" class="btn btn-warning">✏️ Edit Info</button>
+            <button onclick="goBackToForm()" class="btn btn-secondary">🔙 Go Back</button>
+        </div>
+    </div>
+
+
+   <script>
+    function submitPatientForm(event) {
+        event.preventDefault();
+
+        const patient = {
+            firstName: document.getElementById("FirstName").value,
+            lastName: document.getElementById("LastName").value,
+            dob: document.getElementById("DOB").value,
+            gender: document.getElementById("Gender").value,
+            phone: document.getElementById("Phone").value,
+            email: document.getElementById("Email").value,
+            allergies: document.getElementById("Allergies").value,
+            emergencyContact: document.getElementById("EmergencyContact").value,
+            emergencyPhone: document.getElementById("EmergencyPhone").value
+        };
+
+        const detailHTML = `
+            <p><strong>👤 Name:</strong> ${patient.firstName} ${patient.lastName}</p>
+            <p><strong>📅 DOB:</strong> ${patient.dob}</p>
+            <p><strong>⚧ Gender:</strong> ${patient.gender}</p>
+            <p><strong>📞 Phone:</strong> ${patient.phone}</p>
+            <p><strong>📧 Email:</strong> ${patient.email}</p>
+            <p><strong>💉 Allergies:</strong> ${patient.allergies}</p>
+            <p><strong>🚨 Emergency Contact:</strong> ${patient.emergencyContact}</p>
+            <p><strong>📱 Emergency Phone:</strong> ${patient.emergencyPhone}</p>
+        `;
+
+        document.getElementById("patientDetailsContent").innerHTML = detailHTML;
+
+        // Show the details section
+        document.querySelector(".modal-content").classList.add("hidden");
+        document.getElementById("patientDetails").classList.remove("hidden");
+
+        // Reset the form fields
+        document.querySelector("form").reset();
+
+        alert("✅ Profile created (simulated).");
+    }
+</script>
+
+
+   
+
+</body>
+
+
+
+
+
+
+

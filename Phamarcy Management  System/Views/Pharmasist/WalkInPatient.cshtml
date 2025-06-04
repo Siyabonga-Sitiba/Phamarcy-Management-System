@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Walk-In Patient";
+}
+
+<h2>Register Walk-In Patient</h2>
+
+<form id="walkInForm">
+    <label>Patient ID:</label>
+    <input type="text" id="patientId"><br><br>
+
+    <label>Name:</label>
+    <input type="text" id="patientName"><br><br>
+
+    <label>Allergies (comma-separated):</label>
+    <input type="text" id="allergies"><br><br>
+
+    <button type="submit">Register Patient</button>
+</form>
+
+<div id="patientAlert" style="color: green;"></div>
+
+<script>
+    const patientStore = {};
+
+    document.getElementById("walkInForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const id = document.getElementById("patientId").value;
+        const name = document.getElementById("patientName").value;
+        const allergyInput = document.getElementById("allergies").value;
+        patientStore[id] = {
+            name: name,
+            allergies: allergyInput.split(',').map(a => a.trim())
+        };
+        document.getElementById("patientAlert").innerText = "✅ Patient registered.";
+    });
+</script>
+
+}

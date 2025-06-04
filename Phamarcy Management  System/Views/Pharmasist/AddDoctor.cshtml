@@ -1,0 +1,215 @@
+﻿@model Phamarcy_Management__System.Models.PharmacistModels.PrescriptionUploadViewModel
+@{
+    ViewData["Title"] = "Create Patient Profile";
+    Layout = "_PharmacistLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Add New Doctor</title>
+    <style>
+        .upload-prescription-page h1,
+        .upload-prescription-page h2,
+        .upload-prescription-page h3,
+        .upload-prescription-page h4 {
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .details {
+            background: darkgrey;
+            padding: 30px;
+            border-radius: 8px;
+            width: 70%;
+            margin: 30px auto;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+            .form-grid.single {
+                grid-template-columns: 1fr;
+            }
+
+        .input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            width: 100%;
+        }
+
+            .input:invalid {
+                border-color: #dc3545;
+            }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 6px solid #28a745;
+            padding: 16px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 9999;
+            min-width: 250px;
+        }
+
+            #notification span {
+                font-weight: bold;
+                margin-right: 10px;
+            }
+
+            #notification button {
+                float: right;
+                background: transparent;
+                border: none;
+                font-size: 18px;
+                line-height: 1;
+                color: #155724;
+                cursor: pointer;
+            }
+
+        #doctorList {
+            color: white;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body class="upload-prescription-page">
+
+    <!-- Notification mockup -->
+    <div id="notification">
+        <span>Doctor Saved!</span> The new doctor profile has been added.
+        <button onclick="hideNotification()">×</button>
+    </div>
+
+    <div class="details">
+        <h3>Add New Doctor</h3>
+
+        <form id="addDoctorForm">
+            <div class="form-grid">
+                <div>
+                    <label for="doctorName" style="color:#fff;">Full Name</label>
+                    <input type="text" id="doctorName" class="input" placeholder="e.g. Dr. Sarah Miles" required />
+                </div>
+                <div>
+                    <label for="doctorEmail" style="color:#fff;">Email</label>
+                    <input type="email" id="doctorEmail" class="input" placeholder="e.g. sarah.miles@clinic.com" required />
+                </div>
+                <div>
+                    <label for="editPractice" style="color:#fff;">Practice Number</label>
+                    <input type="text" id="editPractice" class="input" placeholder="Practice Number" required />
+                </div>
+                <div>
+                    <label for="editLicence" style="color:#fff;">Licence Number</label>
+                    <input type="text" id="editLicence" class="input" placeholder="Licence Number" />
+                </div>
+                <div>
+                    <label for="doctorPhone" style="color:#fff;">Phone</label>
+                    <input type="tel" id="doctorPhone" class="input" placeholder="e.g. +1234567890" required />
+                </div>
+                <div>
+                    <label for="editSpecialty" style="color:#fff;">Specialty</label>
+                    <select id="editSpecialty" class="input" required>
+                        <option value="General">General</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Dermatology">Dermatology</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">Add Doctor</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="details" style="margin-top: 40px;">
+        <h4>Saved Doctors</h4>
+        <ul id="doctorList"></ul>
+    </div>
+
+    <script>
+        const form = document.getElementById("addDoctorForm");
+        const doctorList = document.getElementById("doctorList");
+        const notification = document.getElementById("notification");
+
+        const savedDoctors = [];
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("doctorName").value.trim();
+            const email = document.getElementById("doctorEmail").value.trim();
+            const phone = document.getElementById("doctorPhone").value.trim();
+            const practice = document.getElementById("editPractice").value.trim();
+            const licence = document.getElementById("editLicence").value.trim();
+            const specialty = document.getElementById("editSpecialty").value;
+
+            if (!name || !email || !phone || !practice || !specialty) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+
+            const doctor = { name, email, phone, practice, licence, specialty };
+            savedDoctors.push(doctor);
+
+            updateDoctorList();
+            showNotification();
+
+            form.reset();
+        });
+
+        function updateDoctorList() {
+            doctorList.innerHTML = "";
+            savedDoctors.forEach(doc => {
+                const li = document.createElement("li");
+                li.textContent = `${doc.name} (${doc.specialty}) - ${doc.email}`;
+                doctorList.appendChild(li);
+            });
+        }
+
+        function showNotification() {
+            notification.style.display = "block";
+            setTimeout(hideNotification, 4000);
+        }
+
+        function hideNotification() {
+            notification.style.display = "none";
+        }
+    </script>
+
+</body>
+</html>

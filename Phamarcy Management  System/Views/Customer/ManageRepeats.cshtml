@@ -1,0 +1,242 @@
+﻿@{
+    ViewData["Title"] = "Order Medication";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<!-- Page Container -->
+<div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 py-10 px-4">
+
+    <!-- PAST PRESCRIPTIONS SECTION -->
+    <div class="w-full max-w-6xl bg-white shadow-lg rounded-2xl p-6 mb-10">
+        <h3 class="text-xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+            <i class="fas fa-history text-blue-700"></i> Past Prescriptions
+        </h3>
+
+        <div class="mb-4">
+            <label class="text-gray-700 font-medium">Filter by Date:</label>
+            <input type="date" class="ml-2 px-3 py-2 border rounded shadow-sm" />
+        </div>
+
+        <table id="pastPrescriptions" class="w-full text-sm border border-gray-200 rounded table-auto">
+            <thead class="bg-gray-400 text-white font-semibold">
+                <tr>
+                    <th class="px-4 py-2 text-left">Script #</th>
+                    <th class="px-4 py-2 text-left">Doctor</th>
+                    <th class="px-4 py-2 text-left cursor-pointer hover:underline" onclick="sortTableByDate()">Date <i class="fas fa-sort"></i></th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                    <th class="px-4 py-2 text-left">View</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="px-4 py-2 text-black">RX-002120</td>
+                    <td class="px-4 py-2 text-black">Dr. L. Mokoena</td>
+                    <td class="px-4 py-2 text-black">2025-05-20</td>
+                    <td class="px-4 py-2 text-green-600 font-medium">Dispensed</td>
+                    <td class="px-4 py-2">
+                        <button class="text-blue-600 hover:underline" onclick="openPopup('RX-002120', '2025-05-20', 'Leana Deebb', ['Amoxicillin 500mg', 'Paracetamol 500mg'])">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="px-4 py-2 text-black">RX-002115</td>
+                    <td class="px-4 py-2 text-black">Dr. K. Dube</td>
+                    <td class="px-4 py-2 text-black">2025-05-15</td>
+                    <td class="px-4 py-2 text-red-600 font-medium">Expired</td>
+                    <td class="px-4 py-2">
+                        <button class="text-blue-600 hover:underline" onclick="openPopup('RX-002115', '2025-05-15', 'Samuel Khumalo', ['Ibuprofen 400mg', 'Cough Syrup'])">
+                            <i class="fas fa-eye"></i> View
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ORDER MEDICATION SECTION -->
+    <div class="w-full max-w-6xl bg-white shadow-xl rounded-2xl p-8">
+        <h2 class="text-2xl font-bold mb-6 text-blue-900 flex items-center gap-2">
+            <i class="fas fa-pills text-blue-700"></i> Order Medication
+        </h2>
+
+        <!-- Prescription Info -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div>
+                <label class="font-semibold text-gray-700">Date:</label>
+                <div class="border border-gray-300 p-2 rounded text-black font-medium">14 May 2025</div>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">Doctor:</label>
+                <div class="border border-gray-300 p-2 rounded text-black font-medium">Dr. Lisa Mokoena</div>
+            </div>
+            <div>
+                <label class="font-semibold text-gray-700">Prescription ID:</label>
+                <div class="border border-gray-300 p-2 rounded text-black font-medium">#RX-002123</div>
+            </div>
+        </div>
+
+        <!-- Medication Table -->
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="min-w-full text-sm text-gray-800 table-auto">
+                <thead class="bg-gray-400 text-white font-semibold">
+                    <tr>
+                        <th class="px-4 py-3 w-10"></th>
+                        <th class="px-4 py-3 text-left">Medication</th>
+                        <th class="px-4 py-3 text-left">Quantity</th>
+                        <th class="px-4 py-3 text-left">Instruction</th>
+                        <th class="px-4 py-3 text-left">Repeats Left</th>
+                        <th class="px-4 py-3 text-left">Price</th>
+                    </tr>
+                </thead>
+                <tbody id="orderMedicationBody">
+                    <tr class="hover:bg-blue-50">
+                        <td class="px-4 py-3"><input type="checkbox" onchange="calculateTotal()" data-price="150" /></td>
+                        <td class="px-4 py-3">Amoxicillin 500mg</td>
+                        <td class="px-4 py-3">20</td>
+                        <td class="px-4 py-3">1 capsule 3x a day</td>
+                        <td class="px-4 py-3">2</td>
+                        <td class="px-4 py-3">R150.00</td>
+                    </tr>
+                    <tr class="hover:bg-blue-50">
+                        <td class="px-4 py-3"><input type="checkbox" onchange="calculateTotal()" data-price="100" /></td>
+                        <td class="px-4 py-3">Paracetamol 500mg</td>
+                        <td class="px-4 py-3">30</td>
+                        <td class="px-4 py-3">1 tablet 4x a day</td>
+                        <td class="px-4 py-3">1</td>
+                        <td class="px-4 py-3">R100.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totals -->
+        <div class="mt-6 text-right space-y-2">
+            <div class="text-lg font-medium text-gray-700">Subtotal: <span id="subtotal" class="font-bold">R0.00</span></div>
+            <div class="text-lg font-medium text-gray-700">VAT (15%): <span id="vat" class="font-bold">R0.00</span></div>
+            <div class="text-xl font-bold text-blue-900">Total Due: <span id="total">R0.00</span></div>
+        </div>
+
+        <!-- Button -->
+        <div class="mt-6 text-right">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200">
+                <i class="fas fa-check-circle mr-2"></i>Place Order
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- PRESCRIPTION VIEW POPUP -->
+<div id="popup" class="fixed hidden top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+        <h3 class="text-lg font-bold text-blue-900 mb-4">Prescription Details</h3>
+        <div id="popupContent" class="text-gray-800 space-y-2">
+            <!-- Filled by JS -->
+        </div>
+        <div class="mt-4 flex justify-end gap-2">
+            <button onclick="reorderPrescription()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                <i class="fas fa-cart-plus"></i> Reorder
+            </button>
+            <button onclick="closePopup()" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedPrescription = {
+        id: '',
+        doctor: '',
+        meds: []
+    };
+
+    // This opens the popup and stores prescription info
+    function openPopup(scriptId, date, doctorName, meds = []) {
+        selectedPrescription.id = scriptId;
+        selectedPrescription.doctor = doctorName;
+        selectedPrescription.meds = meds;
+
+        let medImages = meds.map(med => `
+                <div class="flex flex-col items-center">
+                    <img src="https://via.placeholder.com/50" class="rounded shadow" alt="${med}" />
+                    <span class="text-xs mt-1 text-center">${med}</span>
+                </div>`).join('');
+
+        const content = `
+                <p><strong>Prescription #:</strong> ${scriptId}</p>
+                <p><strong>Date Picked Up:</strong> ${date}</p>
+                <p><strong>Picked Up By:</strong> ${doctorName}</p>
+                <div class="flex gap-2 mt-3 justify-center">
+                    ${medImages}
+                </div>`;
+
+        document.getElementById("popupContent").innerHTML = content;
+        document.getElementById("popup").classList.remove("hidden");
+    }
+
+    // Close popup
+    function closePopup() {
+        document.getElementById("popup").classList.add("hidden");
+    }
+
+    // Reorder button logic
+    function reorderPrescription() {
+        // Get today's date
+        const today = new Date();
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        const formattedDate = today.toLocaleDateString('en-ZA', options); // e.g., 22 May 2025
+
+        // Update Prescription Info section
+        document.querySelectorAll(".grid .border").forEach((el, i) => {
+            if (i === 0) el.innerText = formattedDate; // Date
+            if (i === 1) el.innerText = selectedPrescription.doctor; // Doctor
+            if (i === 2) el.innerText = `#${selectedPrescription.id}`; // Script ID
+        });
+
+        // Update the medication table body
+        const tbody = document.getElementById("orderMedicationBody");
+        tbody.innerHTML = ""; // clear old data
+
+        selectedPrescription.meds.forEach(med => {
+            const price = Math.floor(Math.random() * 100 + 50); // Dummy price
+            const quantity = Math.floor(Math.random() * 30 + 10); // Dummy quantity
+            const repeats = Math.floor(Math.random() * 3 + 1); // Dummy repeats
+            const instruction = "3x a day,after meals"; // Dummy instruction
+
+            const row = document.createElement("tr");
+            row.className = "hover:bg-blue-50";
+            row.innerHTML = `
+                    <td class="px-4 py-3"><input type="checkbox" onchange="calculateTotal()" data-price="${price}" /></td>
+                    <td class="px-4 py-3">${med}</td>
+                    <td class="px-4 py-3">${quantity}</td>
+                    <td class="px-4 py-3">${instruction}</td>
+                    <td class="px-4 py-3">${repeats}</td>
+                    <td class="px-4 py-3">R${price}.00</td>
+                `;
+            tbody.appendChild(row);
+        });
+
+        calculateTotal();
+        closePopup();
+    }
+
+    function calculateTotal() {
+        const checkboxes = document.querySelectorAll('#orderMedicationBody input[type="checkbox"]');
+        let subtotal = 0;
+
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                subtotal += parseFloat(cb.dataset.price);
+            }
+        });
+
+        const vat = subtotal * 0.15;
+        const total = subtotal + vat;
+
+        document.getElementById("subtotal").innerText = `R${subtotal.toFixed(2)}`;
+        document.getElementById("vat").innerText = `R${vat.toFixed(2)}`;
+        document.getElementById("total").innerText = `R${total.toFixed(2)}`;
+    }
+</script>
+

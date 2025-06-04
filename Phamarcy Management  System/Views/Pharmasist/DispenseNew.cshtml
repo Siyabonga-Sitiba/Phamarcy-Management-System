@@ -1,0 +1,352 @@
+﻿@model Phamarcy_Management__System.Models.PharmacistModels.PrescriptionUploadViewModel
+@{
+
+    ViewData["Title"] = "Create Patient Profile";
+}
+
+@{
+    Layout = "_PharmacistLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dispense Prescription (Mock UI)</title>
+    <style>
+        body {
+            background: #f4f6f8;
+            font-family: Arial, sans-serif;
+            color: #222;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 40px 0 30px;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .alert {
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            width: 90%;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        p {
+            max-width: 900px;
+            margin: 0 auto 12px auto;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 90%;
+            color: #111;
+        }
+
+        h4 {
+            max-width: 900px;
+            margin: 30px auto 10px auto;
+            font-weight: 700;
+            font-size: 1.5rem;
+            width: 90%;
+            color: #222;
+        }
+
+        table {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+            border-collapse: collapse;
+            background-color: #f0f0f0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+            font-size: 1.1rem;
+        }
+
+        thead tr {
+            background-color: #e0e0e0;
+        }
+
+        thead th,
+        tbody td {
+            padding: 14px 20px;
+            color: #000;
+        }
+
+        form {
+            max-width: 900px;
+            margin: 0 auto 40px auto;
+            width: 90%;
+            text-align: center;
+        }
+
+        button.btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            background-color: #28a745;
+            border: none;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+            button.btn:disabled {
+                background-color: #94d3a2;
+                cursor: not-allowed;
+            }
+
+        a.btn-secondary {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            background-color: #6c757d;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+            a.btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .controls label {
+                font-size: 1rem;
+                font-weight: 600;
+                margin-right: 15px;
+                cursor: pointer;
+            }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        }
+
+            .modal-content h3 {
+                margin-bottom: 20px;
+            }
+
+            .modal-content button {
+                padding: 10px 20px;
+                margin: 10px;
+                border: none;
+                border-radius: 8px;
+                font-size: 1rem;
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+        .confirm {
+            background: #28a745;
+            color: white;
+        }
+
+        .cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .status-msg {
+            max-width: 900px;
+            margin: 10px auto 20px auto;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Dispense Prescription (ID: 98765)</h2>
+
+    <div class="controls">
+        <label><input type="radio" name="dispenseMode" value="walkin" checked /> Walk-in</label>
+        <label><input type="radio" name="dispenseMode" value="order" /> Order Request</label>
+    </div>
+
+    <div class="controls">
+        <label><input type="checkbox" id="allergyCheck" /> Allergy</label>
+        <label><input type="checkbox" id="repeatCheck" checked /> Has Repeats Left</label>
+    </div>
+
+    <div id="alerts"></div>
+
+    <p><b>Patient:</b> John Doe (P123456)</p>
+    <p><b>Doctor:</b> Dr. Emily Carter</p>
+    <p><b>Date:</b> 2025-05-28</p>
+
+    <h4>Medications</h4>
+    <table>
+        <thead>
+            <tr><th>Name</th><th>Qty</th><th>Instructions</th><th>Repeats Left</th></tr>
+        </thead>
+        <tbody id="medListBody">
+            <tr>
+                <td>Amoxicillin</td>
+                <td>30</td>
+                <td>Take one capsule every 8 hours</td>
+                <td data-repeat="0">0</td>
+            </tr>
+            <tr>
+                <td>Loratadine</td>
+                <td>10</td>
+                <td>Take one tablet daily</td>
+                <td data-repeat="1">1</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form id="dispenseForm" onsubmit="event.preventDefault(); tryDispense();">
+        <button id="dispenseBtn" type="submit" class="btn">Confirm Dispense</button>
+        <a href="#" class="btn-secondary" onclick="resetSimulation()">Cancel</a>
+    </form>
+
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3>Confirm Dispense</h3>
+            <p>This action will dispense the prescription. Continue?</p>
+            <button class="confirm" onclick="confirmDispense()">Yes, Dispense</button>
+            <button class="cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <div id="statusMessage" class="status-msg" style="display:none;"></div>
+
+    <script>
+        const allergyCheck = document.getElementById('allergyCheck');
+        const repeatCheck = document.getElementById('repeatCheck');
+        const alertsDiv = document.getElementById('alerts');
+        const dispenseBtn = document.getElementById('dispenseBtn');
+        const modal = document.getElementById('confirmModal');
+        const statusMsg = document.getElementById('statusMessage');
+        const medListBody = document.getElementById('medListBody');
+
+        function updateUI() {
+          const hasAllergy = allergyCheck.checked;
+          const hasRepeats = repeatCheck.checked;
+
+          alertsDiv.innerHTML = '';
+
+          if (hasAllergy) {
+            const allergyAlert = document.createElement('div');
+            allergyAlert.className = 'alert alert-danger';
+            allergyAlert.innerText = '⚠️ Cannot dispense: Patient allergic to at least one ingredient!';
+            alertsDiv.appendChild(allergyAlert);
+          }
+
+          if (!hasRepeats) {
+            const repeatAlert = document.createElement('div');
+            repeatAlert.className = 'alert alert-warning';
+            repeatAlert.innerText = '⚠️ Cannot dispense: No repeats left for one or more medications.';
+            alertsDiv.appendChild(repeatAlert);
+          }
+
+          dispenseBtn.disabled = hasAllergy || !hasRepeats;
+          statusMsg.style.display = 'none';
+        }
+
+        function tryDispense() {
+          // Show confirm modal only if no alerts
+          if (dispenseBtn.disabled) return;
+          modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+          modal.style.display = 'none';
+        }
+
+        function confirmDispense() {
+          closeModal();
+
+          // Simulate packing process and email notification
+          dispenseBtn.disabled = true;
+
+          statusMsg.style.display = 'block';
+          statusMsg.style.color = '#0c5460';
+          statusMsg.style.backgroundColor = '#d1ecf1';
+          statusMsg.style.borderColor = '#bee5eb';
+          statusMsg.innerText = 'Packing prescription...';
+
+          setTimeout(() => {
+            statusMsg.style.color = '#155724';
+            statusMsg.style.backgroundColor = '#d4edda';
+            statusMsg.style.borderColor = '#c3e6cb';
+            statusMsg.innerText = 'Prescription packed successfully.';
+
+            setTimeout(() => {
+              statusMsg.innerText = 'Email notification sent to patient: John Doe.';
+              // Optionally re-enable button for demo purposes
+              // dispenseBtn.disabled = false;
+            }, 1500);
+          }, 1500);
+        }
+
+        function resetSimulation() {
+          allergyCheck.checked = false;
+          repeatCheck.checked = true;
+          updateUI();
+          statusMsg.style.display = 'none';
+          dispenseBtn.disabled = false;
+        }
+
+        allergyCheck.addEventListener('change', updateUI);
+        repeatCheck.addEventListener('change', updateUI);
+
+        // Initial UI update
+        updateUI();
+    </script>
+
+</body>
+</html> 
+
+
+

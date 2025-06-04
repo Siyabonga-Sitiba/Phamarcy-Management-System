@@ -1,0 +1,284 @@
+﻿@model Phamarcy_Management__System.Models.PharmacistModels.PrescriptionUploadViewModel
+@{
+
+    ViewData["Title"] = "Create Patient Profile";
+}
+
+@{
+    Layout = "_PharmacistLayout";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Notify Customers</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        <style >
+        .patient-info-page h1,
+        .patient-info-page h3,
+        .patient-info-page h4,
+        .upload-prescription-page h1,
+        .upload-prescription-page h2,
+        .upload-prescription-page h3,
+        .upload-prescription-page h4 {
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+            .modal.hidden {
+                display: none;
+            }
+
+        .modal-content {
+            background: darkgrey;
+            padding: 30px;
+            border-radius: 8px;
+            width: 70%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-family: Arial, sans-serif;
+            margin: 30px auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+            .modal-header h3 {
+                margin: 0;
+            }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+            .close-btn:hover {
+                color: darkred;
+            }
+
+        h5 {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+            .form-grid.single {
+                grid-template-columns: 1fr;
+            }
+
+        .input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            width: 100%;
+        }
+
+            .input:invalid {
+                border-color: #dc3545;
+            }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .details {
+            background: darkgrey;
+            padding: 30px;
+            border-radius: 8px;
+            width: 70%;
+            margin: 30px auto;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .details-content {
+            margin-top: 15px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body class="upload-prescription-page">
+
+    <div class="details">
+        <h3>Notify Customers</h3>
+        <form id="notifyForm">
+            <div class="form-grid single">
+                <label for="customerSelect">Select Customers</label>
+                <select id="customerSelect" class="input" multiple size="4" required>
+                    <option value="john.smith@email.com">John Smith</option>
+                    <option value="emily.brown@email.com">Emily Brown</option>
+                    <option value="david.lee@email.com">David Lee</option>
+                    <option value="sara.connor@email.com">Sara Connor</option>
+                </select>
+
+                <label for="message">Message</label>
+                <textarea id="message" class="input" placeholder="e.g. Your prescription is ready for pickup." required></textarea>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">Send Notification</button>
+                <button type="button" id="copyEmail" class="btn btn-secondary">📋 Copy Email</button>
+                <button type="button" id="downloadPDF" class="btn btn-warning">📄 Download PDF</button>
+                <button type="button" id="printEmail" class="btn btn-secondary">🖨️ Print Email</button>
+            </div>
+
+            <div id="formMessage" class="message success" style="display: none;">
+                ✅ Email(s) generated below.
+            </div>
+        </form>
+
+        <div id="emailPreview" class="email-preview">
+            <h4>📧 Email Preview</h4>
+            <div id="emailList" class="email-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const notifyForm = document.getElementById('notifyForm');
+        const customerSelect = document.getElementById('customerSelect');
+        const messageInput = document.getElementById('message');
+        const emailPreview = document.getElementById('emailPreview');
+        const emailList = document.getElementById('emailList');
+        const formMessage = document.getElementById('formMessage');
+
+        notifyForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const selected = Array.from(customerSelect.selectedOptions);
+            const message = messageInput.value.trim();
+
+            if (selected.length === 0 || !message) {
+                formMessage.textContent = "Please select at least one customer and enter a message.";
+                formMessage.className = "message error";
+                formMessage.style.display = "block";
+                return;
+            }
+
+            const subject = "Prescription Ready for Pickup";
+            let output = "";
+
+            selected.forEach(option => {
+                const email = option.value;
+                const name = option.text;
+                const body = `Dear ${name},\n\n${message}\n\nThank you for using our pharmacy.\n- SZS Pharmacy\n`;
+                output += `To: ${email}\nSubject: ${subject}\n${body}\n--------------------\n`;
+            });
+
+            emailList.textContent = output;
+            emailPreview.style.display = "block";
+            formMessage.className = "message success";
+            formMessage.style.display = "block";
+        });
+
+        document.getElementById('copyEmail').addEventListener('click', () => {
+            navigator.clipboard.writeText(emailList.textContent)
+                .then(() => alert('Email content copied to clipboard!'))
+                .catch(err => alert('Failed to copy: ' + err));
+        });
+
+        document.getElementById('downloadPDF').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const lines = emailList.textContent.split("\n");
+            let y = 10;
+            lines.forEach(line => {
+                doc.text(line, 10, y);
+                y += 7;
+                if (y > 280) {
+                    doc.addPage();
+                    y = 10;
+                }
+            });
+            doc.save("Email_Notification.pdf");
+        });
+
+        document.getElementById('printEmail').addEventListener('click', () => {
+            const w = window.open();
+            w.document.write("<pre>" + emailList.textContent + "</pre>");
+            w.document.close();
+            w.print();
+        });
+    </script>
+
+</body>
+</html>
+

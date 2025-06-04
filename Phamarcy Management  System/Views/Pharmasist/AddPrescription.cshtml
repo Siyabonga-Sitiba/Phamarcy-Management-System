@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Add Prescription";
+}
+<h2>Add Prescription for @ViewBag.PatientName</h2>
+
+<form id="prescriptionForm">
+    <input type="hidden" id="PatientId" value="@ViewBag.PatientId" />
+
+    <div>
+        <label>Drug Name:</label>
+        <input id="DrugName" required />
+    </div>
+    <div>
+        <label>Dosage:</label>
+        <input id="Dosage" required />
+    </div>
+    <div>
+        <label>Quantity:</label>
+        <input id="Quantity" type="number" min="1" value="1" required />
+    </div>
+    <div>
+        <label>Instructions:</label>
+        <input id="Instructions" />
+    </div>
+    <button type="submit">Add Prescription</button>
+</form>
+
+<h3>Prescriptions List</h3>
+<table id="prescriptionsTable" border="1" cellpadding="5" cellspacing="0">
+    <thead>
+        <tr>
+            <th>Drug Name</th>
+            <th>Dosage</th>
+            <th>Quantity</th>
+            <th>Instructions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- JS will add rows here -->
+    </tbody>
+</table>
+
+<script>
+    document.getElementById('prescriptionForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Get values
+        const drugName = document.getElementById('DrugName').value.trim();
+        const dosage = document.getElementById('Dosage').value.trim();
+        const quantity = document.getElementById('Quantity').value.trim();
+        const instructions = document.getElementById('Instructions').value.trim();
+
+        if (!drugName || !dosage || !quantity) {
+            alert('Please fill out all required fields.');
+            return;
+        }
+
+        // Create table row
+        const tbody = document.querySelector('#prescriptionsTable tbody');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${drugName}</td>
+            <td>${dosage}</td>
+            <td>${quantity}</td>
+            <td>${instructions}</td>
+        `;
+
+        tbody.appendChild(tr);
+
+        // Reset form fields
+        document.getElementById('prescriptionForm').reset();
+    });
+</script>
+}

@@ -1,0 +1,417 @@
+﻿@{
+    ViewData["Title"] = "Upload Prescription (Mock)";
+    Layout = "_PharmacistLayout";
+}
+
+<!DOCTYPE html>
+
+<style>
+    .modal-content {
+        background: darkgrey;
+        padding: 30px;
+        border-radius: 8px;
+        width: 70%;
+        margin: 30px auto;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        font-family: Arial, sans-serif;
+        color: #333;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    h5 {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    form {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+        .form-grid.single {
+            grid-template-columns: 1fr;
+        }
+
+    .medication-entry {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .input {
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        width: 100%;
+    }
+
+    .button-group {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .text-danger {
+        font-size: 13px;
+        margin-top: 3px;
+        display: block;
+        color: red;
+    }
+
+    .styled-label,
+    .styled-heading {
+        font-size: 1.8rem;
+        color: white;
+        font-weight: 600;
+    }
+
+    #prescriptionTable {
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+        border-collapse: collapse;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+        #prescriptionTable thead {
+            background-color: #333333;
+        }
+
+        #prescriptionTable th,
+        #prescriptionTable td {
+            padding: 14px 18px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        #prescriptionTable thead th {
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        #prescriptionTable tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        #prescriptionTable tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        #prescriptionTable tbody tr:hover {
+            background-color: #eaeaea;
+        }
+</style>
+
+<body class="upload-prescription-page">
+    <div class="modal-content">
+        <h2 style="font-size: 2.5rem; color: white; font-weight: 700;">📄 Upload Prescription</h2>
+
+        <form onsubmit="submitPrescriptionForm(event)" class="form-grid single" enctype="multipart/form-data">
+
+            <div>
+                <label for="pdf" class="styled-label">📎 Prescription PDF</label>
+                <input type="file" id="pdf" class="input" accept=".pdf" required />
+            </div>
+
+            <div>
+                <label class="styled-label">👤 Patient ID Number</label>
+                <input type="text" id="patientId" class="input" required />
+            </div>
+
+            <div>
+                <label class="styled-label">👨‍⚕️ Doctor</label>
+                <select id="doctorName" class="input" required>
+                    <option value="">-- Select Doctor --</option>
+                    <option value="Dr. Smith">Dr. Smith</option>
+                    <option value="Dr. Johnson">Dr. Johnson</option>
+                    <option value="Dr. Lee">Dr. Lee</option>
+                    <option value="Dr. Patel">Dr. Patel</option>
+                </select>
+            </div>
+            <h5 class="styled-heading">💊 Medications</h5>
+
+            <div id="medications" class="form-grid">
+                <div class="medication-entry">
+                    <select class="input">
+                        <option value="">-- Select Medication --</option>
+                        <option value="1">Paracetamol</option>
+                        <option value="2">Ibuprofen</option>
+                        <option value="3">Amoxicillin</option>
+                        <option value="4">Cetirizine</option>
+                        <option value="5">Metformin</option>
+                    </select>
+                    <input placeholder="Quantity" type="number" class="input" />
+                    <input placeholder="Instructions" class="input" />
+                    <input placeholder="Repeats" type="number" class="input" />
+                    <button type="button" class="btn btn-outline-danger btn-sm remove-btn">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                
+                </div>
+            </div>
+
+            <!-- Add Medication Button -->
+            <div class="mt-3">
+                <button id="addMedicationBtn" class="btn btn-outline-success">
+                    <i class="bi bi-plus-circle me-1"></i> Add Medication
+                </button>
+            </div>
+
+  
+
+            <div>
+                <label class="styled-label">📅 Prescription Date</label>
+                <input type="date" id="prescriptionDate" class="input" required />
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-success">💾 Upload Prescription</button>
+            </div>
+
+            <h2 style="color: white; text-align: center; font-weight: bold; font-size: 2.5rem;">Newly added Prescriptions</h2>
+
+            <table id="prescriptionTable">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>Date</th>
+                        <th>Doctor</th>
+                        <th>Medications</th>
+                        <th>File</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic rows go here -->
+                </tbody>
+            </table>
+
+        </form>
+    </div>
+
+    <script>
+               function createMedicationEntry() {
+            const div = document.createElement("div");
+            div.className = "medication-entry d-flex align-items-center gap-2 mb-2";
+
+            div.innerHTML = `
+                <select class="input form-select">
+                    <option value="">-- Select Medication --</option>
+                    <option value="1">Paracetamol</option>
+                    <option value="2">Ibuprofen</option>
+                    <option value="3">Amoxicillin</option>
+                    <option value="4">Cetirizine</option>
+                    <option value="5">Metformin</option>
+                </select>
+                <input placeholder="Quantity" type="number" class="input form-control" />
+                <input placeholder="Instructions" class="input form-control" />
+                <input placeholder="Repeats" type="number" class="input form-control" />
+                <button type="button" class="btn btn-outline-danger btn-sm remove-btn">
+                    <i class="bi bi-trash"></i>
+                </button>
+            `;
+
+            // Add event listener to new remove button
+            div.querySelector(".remove-btn").addEventListener("click", function () {
+                div.remove();
+            });
+
+            return div;
+        }
+
+        document.getElementById("addMedicationBtn").addEventListener("click", function () {
+            const medicationsDiv = document.getElementById("medications");
+            medicationsDiv.appendChild(createMedicationEntry());
+        });
+
+        // Activate remove button on the first one
+        document.querySelectorAll(".remove-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                btn.closest(".medication-entry").remove();
+            });
+        });
+                function submitPrescriptionForm(event) {
+            event.preventDefault();
+
+            const patientId = document.getElementById("patientId").value;
+            const doctor = document.getElementById("doctorName").value;
+            const date = document.getElementById("prescriptionDate").value;
+            const fileInput = document.getElementById("pdf");
+            const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : "No file";
+
+            const medicationEntries = document.querySelectorAll(".medication-entry");
+
+            let medsHtmlList = "<ul>";
+            let firstDrug = "";
+            let firstQty = "";
+            let firstDosage = "";
+            let firstInstructions = "";
+            medicationEntries.forEach((entry, index) => {
+                const drug = entry.querySelector("select").selectedOptions[0].text;
+                const qty = entry.querySelector("input[placeholder='Quantity']").value;
+                const instructions = entry.querySelector("input[placeholder='Instructions']").value;
+                const repeats = entry.querySelector("input[placeholder='Repeats']").value;
+
+                medsHtmlList += `<li>${drug} - Qty: ${qty} - Repeats: ${repeats} - ${instructions}</li>`;
+
+                // Grab first entry only for dashboard table
+                if (index === 0) {
+                    firstDrug = drug;
+                    firstQty = qty;
+                    firstDosage = repeats; // Assuming "repeats" acts as dosage
+                    firstInstructions = instructions;
+                }
+            });
+            medsHtmlList += "</ul>";
+
+            // 1️⃣ Add row to small prescription table
+            const smallTable = document.getElementById("prescriptionTable").querySelector("tbody");
+            const newRow = document.createElement("tr");
+                   newRow.innerHTML = `
+            <td>${patientId}</td>
+            <td>${date}</td>
+            <td>${doctor}</td>
+            <td>${medsHtmlList}</td>
+            <td>${fileName}</td>
+            <td>
+                <button class="btn btn-sm btn-primary" onclick="viewPrescription(this)">View</button>
+                <button class="btn btn-sm btn-success" onclick="dispensePrescription(this)">Dispense</button>
+            </td>
+        `;
+            smallTable.appendChild(newRow);
+
+           const newPrescription = {
+            patientId,
+            doctor,
+            date,
+            firstDrug,
+            firstQty,
+            firstDosage,
+            firstInstructions,
+            status: "Pending"
+        };
+
+        // Get existing from localStorage
+        const existingPrescriptions = JSON.parse(localStorage.getItem("prescriptions") || "[]");
+
+        // Add new one
+        existingPrescriptions.push(newPrescription);
+
+        // Save back to localStorage
+        localStorage.setItem("prescriptions", JSON.stringify(existingPrescriptions));
+
+       
+
+            // Reset form and medication section
+            document.getElementById("pdf").value = "";
+            document.getElementById("patientId").value = "";
+            document.getElementById("doctorName").value = "";
+            document.getElementById("prescriptionDate").value = "";
+
+            const medsContainer = document.getElementById("medications");
+            medsContainer.innerHTML = "";
+            medsContainer.appendChild(createMedicationEntry());
+
+            alert("✅ Prescription saved and displayed.");
+        }
+
+        document.getElementById("prescriptionTable").scrollIntoView({ behavior: "smooth" });
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+            const dashboardBody = document.getElementById("prescription-body");
+
+            const storedPrescriptions = JSON.parse(localStorage.getItem("prescriptions") || "[]");
+
+            storedPrescriptions.forEach(pres => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${pres.patientId}</td>
+                    <td>${pres.firstDrug}</td>
+                    <td>${pres.firstDosage}</td>
+                    <td>${pres.firstQty}</td>
+                    <td>${pres.firstInstructions}</td>
+                    <td>${pres.doctor}</td>
+                    <td>${pres.date}</td>
+                    <td><span class="badge bg-warning text-dark">${pres.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary me-1">View</button>
+                        <button class="btn btn-sm btn-success">Dispense</button>
+                    </td>
+                `;
+                dashboardBody.appendChild(row);
+            });
+        });
+                function viewPrescription(button) {
+            const row = button.closest('tr');
+            const patientId = row.children[0].textContent;
+            const date = row.children[1].textContent;
+            const doctor = row.children[2].textContent;
+            const medications = row.children[3].innerHTML;
+
+            alert(`📄 Prescription Details:\n\nPatient ID: ${patientId}\nDate: ${date}\nDoctor: ${doctor}\n\nMedications:\n${medications.replace(/<[^>]+>/g, '')}`);
+        }
+
+        function dispensePrescription(button) {
+            const row = button.closest('tr');
+
+            // Simulate dispensing logic (no allergy/repeat check here, could be added)
+            if (confirm("✅ Confirm dispensing this prescription?")) {
+                row.style.backgroundColor = "#d4edda"; // light green to indicate success
+                button.disabled = true;
+                button.textContent = "Dispensed";
+
+                // Optional: change status in localStorage (for persistence)
+                const patientId = row.children[0].textContent;
+                const stored = JSON.parse(localStorage.getItem("prescriptions") || "[]");
+                const updated = stored.map(p => {
+                    if (p.patientId === patientId) {
+                        p.status = "Dispensed";
+                    }
+                    return p;
+                });
+                localStorage.setItem("prescriptions", JSON.stringify(updated));
+            }
+        }
+
+
+    </script>
+</body>

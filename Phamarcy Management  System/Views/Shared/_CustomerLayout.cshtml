@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pharmacy Management System</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- AOS CSS -->
+
+
+</head>
+<body>
+    
+    <header>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+        <div class="header-container">
+            <!-- Logo and Navigation -->
+            <a asp-area="" asp-controller="Customer" asp-action="Dashboard" class="logo-container">
+                <img src="~/Logo/Szs Pharmacy Logo.png" alt="Pharmacy Logo" class="logo-img" />
+                <span class="logo-text">SZS <span style="color:darkblue">Pharmacy</span></span>
+            </a>
+
+            <nav class="navbar">
+                <!-- Dashboard Link -->
+                <a asp-controller="Customer" asp-action="Dashboard">Dashboard</a>
+
+                <!-- Prescriptions Link -->
+                <a asp-controller="Prescription" asp-action="Upload">Prescriptions</a>
+
+                <!-- Repeats Link -->
+                <a asp-controller="Customer" asp-action="ManageRepeats">Repeats</a>
+
+                <!-- Reports Link -->
+                <a asp-controller="Customer" asp-action="GenerateReport">Reports</a>
+            </nav>
+            <div class="user-icon dropdown">
+                <img src="~/Logo/User-Icon.jpg" alt="User Icon" class="user-avatar" />
+                <div class="user-details">
+                    <span class="user-name">Leana Deebb</span>
+                    <span class="user-role">Customer</span>
+                </div>
+                <ul class="dropdown-menu user-menu">
+                    <li><a asp-controller="Account" asp-action="Profile">View Profile</a></li>
+                    <li><a asp-controller="Pharmacy" asp-action="PharmacistLandingPage">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="container" style="margin-top: 100px;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Pharmacy Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Add this before the closing </body> tag -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
